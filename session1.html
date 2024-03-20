@@ -6,9 +6,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.js"
@@ -50,21 +53,35 @@
         }
 
         h2 {
-            color: #166b8c;
+            color: black;
             font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
         }
 
         body {
-            font-family: 'Ubuntu', sans-serif;
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
 
         <a class="navbar-brand" style="margin:auto" href="#">
-            <h3>ASP.NET Core MVC - Session 1</h3>
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 1</h3>
         </a>
 
 
@@ -72,6 +89,13 @@
     </nav>
     <div class="container marginforcontainerclass">
         <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
             <div class="col-md-6">
 
                 <h2>Content</h2>
@@ -82,11 +106,11 @@
 
                 <ul>
                     <li>Introduction</li>
-                    <li>Creating Project</li>
+                    <li>Creating New Project</li>
                     <li>Directory Structure</li>
-                    <li>Working of Application</li>
-                    <li>Shared Layout</li>
                     <li>Controller to View working</li>
+                    <li>Models</li>
+                    
                     
                 </ul>
             </div>
@@ -95,254 +119,133 @@
         <hr>
         <div class="row">
             <div class="col-md-12">
-                <h2>Introduction to Web Apps and Web Technologies</h2>
+                <h2>Introduction</h2>
+                <p>.NET Core is an open-source, cross-platform framework developed by Microsoft for building different types of applications, including web applications, console applications, microservices, libraries, and more. It's a modular and lightweight framework that runs on Windows, macOS, and Linux, making it highly versatile.</p>
+                <h3>Features of .NET Core</h3>
                 <ul>
-                    <li>A web application (or web app) is application software that is accessed using a web browser. Web applications are delivered on the World Wide Web to users with an active network connection.</li>
-                    <li>Web Technology refers to the various tools and techniques that are utilized in the process of communication between different types of devices over the internet.</li>
-                    <li><b>Front-end of Web app-</b> What we see and interact with as the visitors of a web application is considered front-end</li>
-                    <li><b>Back-end of web app-</b> All the behind-the-scenes activity that delivers the data and the speed with which that data is delivered is Back End</li>
+                    <li>Cross-Platform Development</li>
+                    <li>Improved Performance compared to its predecessor, ASP.NET</li>
+                    <li>Open Source</li>
+                    <li>Community Support</li>
+                    <li>Modern Development Features</li>
+                    <li>Built-in Dependency Injection to achieve loose coupling</li>
+                    <li>Security Features</li>
+                    <li>Unified Programming Model</li>
                 </ul>
-                <hr>
-                <h2>IDE- Download and Install (VS Code)</h2>
+                <h3>Core Components of .NET</h3>
+                <uL>
+                    <li><b>Common Language Runtime (CLR): </b> The Common Language Runtime (CLR) is the heart of the .NET Framework (including .NET Core and .NET 5+), providing various services such as memory management, exception handling, type safety, garbage collection, and thread management</li>
+                    <li><b>.NET Class Library: </b> A collection of reusable classes, interfaces, and value types that can be used to develop applications.</li>
+                    <li><b>Common Type System (CTS):</b> It provides a common set of data types ensuring that objects written in different .NET languages can interact with each other.</li>
+                    <li><b>Common Language Specification (CLS):</b> The Common Language Specification (CLS) in .NET is a set of rules and guidelines that defines a common set of features that all .NET languages should support. It ensures interoperability between different .NET languages, allowing code written in one language to seamlessly integrate with code written in another language within the same application.</li>
+                    <li><b>ASP.NET:</b> A part of the .NET framework that is used for building dynamic web applications and services.</li>
+                    <li><b>Entity Framework:</b> An Object-Relational Mapper (ORM) that enables .NET developers to work with relational data using domain-specific objects.</li>
+                    <li><b>LINQ:</b> Language-Integrated Query, which allows developers to write queries directly within the .NET programming languages.</li>
+                   
+                </uL>
+                <h3>Tools</h3>
                 <ul>
-                    <li>An integrated development environment (IDE) is a software suite that consolidates basic tools required to write and test software</li>
-                   <li>Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.</li>
+                    <li><b>Visual Studio:</b> A powerful IDE from Microsoft for developing .NET applications.</li>
+                    <li><b>Visual Studio Code:</b> A lightweight, open-source editor also from Microsoft, suitable for .NET development with appropriate extensions.</li>
                 </ul>
+                <h3>Compilation</h3>
+                <p>The C# compiler (csc.exe) compiles the source code into an intermediate form, known as Common Intermediate Language (CIL) or Microsoft Intermediate Language (MSIL). Alongside the CIL code, metadata describing the types, members, references, etc., in the code, is also generated.</p>
+                <h3>Assembly</h3>
+                <p>The CIL code and metadata are packaged together into an assembly. The assembly usually has a .dll (dynamic link library) or .exe (executable) extension, depending on whether it's a library or an application. An assembly contains a manifest, which has information about the assembly's version, culture, and other assembly metadata.</p>
+                <h3>Code Execution</h3>
+                <p>C# Source Code -> Assembly (.dll/.exe) -> .NET Runtime (CLR + JIT) -> Native Code (Platform Dependent)</p>
                 <hr>
-                <h2>HTML Introduction</h2>
+                <h2>Creating New Project</h2>
+                <p>Open Visual Studio-> Create New Project -> ASP.NET Core Web App (Model-View-Controller) -> Enter Project Name | Select Location | Enter Solution Name -> Create</p>
+                <hr>
+                <h2>Directory Structure</h2>
                <ul>
-                <ul>
-                    <li>HTML stands for Hyper Text Markup Language</li>
-                      <li>HTML describes the structure of Web pages using markup</li>
-                      <li>HTML elements are the building blocks of HTML pages</li>
-                      <li>HTML elements are represented by tags</li>
-                      <li>HTML tags label pieces of content such as "heading", "paragraph", "table", and so on</li>
-                      <li>Browsers do not display the HTML tags, but use them to render the content of the page</li>
-                                <li>HTML Tag syntax :<tagname>content goes here...</tagname></li>
-                    </ul>
+               <li><b>Program.cs File :</b> It contains application startup code - Dependency injection (services) | Middlewares | Host</li>
+               <li><b>wwwroot :</b> It serves as the root directory for static files. These files typically include client-side assets like HTML, CSS, JavaScript, images, and other resources.</li>
+               <li><b>Controllers:</b> Controllers play a critical role in handling incoming HTTP requests, processing user input, interacting with the model layer, and producing appropriate responses.</li>
+               <li><b>Views:</b> Views are responsible for presenting the user interface and rendering HTML content,The "Views" folder typically contains subfolders corresponding to different controllers, "Shared" folder contains layout files</li>
+               <li><b>Models:</b> It contains classes that represent the application's data model. Models encapsulate the business logic, data validation rules, and properties of the application's domain entities.</li>
+               <li><b>launchSettings.json:</b> It is used to configure how the application is launched for debugging and development purposes. It specifies settings related to hosting, environment variables, and debugging options for different launch profiles.</li>
+               <li><b>appsettings.json</b> It is used for storing configuration settings in a structured JSON format. These settings can include various parameters such as database connection strings, logging settings, API keys, feature toggles, and other application-specific configuration options.</li>
                </ul>
                 <hr>
-                <h2>HTML File Structure</h2>
-                <ul>
-                    <li>The <code class="w3-codespan">&lt;!DOCTYPE html&gt;</code> declaration defines this document to be HTML5</li>
-                    <li>The <code class="w3-codespan">&lt;html&gt;</code> element is the root element of an HTML 
-                    page</li>
-                     <li>The <code class="w3-codespan">&lt;head&gt;</code> element contains meta information about the document</li>
-                     <li>The <code class="w3-codespan">&lt;title&gt;</code> element specifies a title for the document</li>
-                     <li>The <code class="w3-codespan">&lt;body&gt;</code> element contains the visible page content</li>
-                     
-                    </ul>
-                <hr>
-                <h2>HTML Headings</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-<pre class="language-csharp"><code>&lt;h1&gt;Heading 1 - h1&lt;/h1&gt;
+                <h2>Controller to View working</h2>
+                <p>We can omplement communication between controller to View using @model directive</p>
+                <h3>Example:</h3>
+                <h4>Controller File</h4>
+                <pre class="language-csharp"><code>public IActionResult Index()
+{
+    int a = 70;
+    return View(a);
 
-&lt;h2&gt;Heading 2 - h2&lt;/h2&gt;
+    //to pass string
+    //string b = "test";
+    //return View("Index",b);
+}</code></pre>
+                <h4>View File</h4>
+                <pre class="language-html"><code>@model int
+@* @model string *@                   
+@{
+ViewData["Title"] = "Home Page";
+}
+                    
+&lt;div class="text-center"&gt;
+   &lt;h1 class="display-4"&gt;Welcome&lt;/h1&gt;
+   &lt;h2&gt;Value from Controller - @Model&lt;/h2&gt;
+   &lt;p&gt;Learn about &lt;a href="https://docs.microsoft.com/aspnet/core"&gt;building Web apps with ASP.NET Core&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                
+                <hr>
+                <h2>Creating Models</h2>
+               <ul>
+                <li>Model define the structure and behavior of the data entities, including properties, methods, validation rules, and relationships.</li>
+                <li>Models encapsulate data access logic, such as querying and updating data in the database, and may interact with services or repositories to perform CRUD (Create, Read, Update, Delete) operations.</li>
+               </ul>
+               <h3>Example:</h3>
+               <pre class="language-csharp"><code>public class Students
+{
+    public int Id { get; set; }
+            
+    public string Name { get; set; } = "Test";
+            
+    public string City { get; set; } = "Test";
+}</code></pre>
+<h3>Example : Using Model in Controller</h3>
+<h4>Contoller File</h4>
+<pre class="language-csharp"><code>public IActionResult Index()
+{
+    Students student = new Students();
+    student.Id = 1;
+    student.Name = "Ram";
+    student.City = "Pune";
+    return View(student);
+}</code></pre>
+<h4>View File</h4>
+<pre class="language-html"><code>@model Students
+@* @model string *@
+@{
+    ViewData["Title"] = "Home Page";
+}
 
-&lt;h3&gt;Heading 3 - h3&lt;/h3&gt;
-
-&lt;h4&gt;Heading 4 - h4&lt;/h4&gt;
-
-&lt;h5&gt;Heading 5 - h5&lt;/h5&gt;
-
-&lt;h6&gt;Heading 6 - h6&lt;/h6&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <h1>Heading 1 - h1</h1>
-                        <h2 style="color: black;">Heading 2 - h2</h2>
-                        <h3>Heading 3 - h3</h3>
-                        <h4>Heading 4 - h4</h4>
-                        <h5>Heading 5 - h5</h5>
-                        <h6>Heading 6 - h6</h6>
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Paragraphs</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>&lt;p&gt;
-Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis quidem iusto rem soluta necessitatibus consequatur placeat aliquam obcaecati accusantium aperiam nihil enim, vero explicabo nulla. Est at quod doloribus placeat!
-&lt;/p&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis quidem iusto rem soluta necessitatibus consequatur placeat aliquam obcaecati accusantium aperiam nihil enim, vero explicabo nulla. Est at quod doloribus placeat!</p>
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Lists</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>//ordered list   
-&lt;ol&gt;
-    &lt;li&gt;Red&lt;/li&gt;
-    &lt;li&gt;Black&lt;/li&gt;
-    &lt;li&gt;Orange&lt;/li&gt;
-&lt;/ol&gt;
-                        
-//unordered list
-&lt;ul&gt;
-    &lt;li&gt;Red&lt;/li&gt;
-    &lt;li&gt;Black&lt;/li&gt;
-    &lt;li&gt;Orange&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <ol>
-                            <li>Red</li>
-                            <li>Black</li>
-                            <li>Orange</li>
-                        </ol>
-                        <hr>
-                        <ul>
-                            <li>Red</li>
-                            <li>Black</li>
-                            <li>Orange</li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Links</h2>
-                <div class="row">
-                    <div class="col-md-8">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>&lt;a href="https://revolutionit.in" target="_blank"&gt;Visit Website&lt;/a&gt;
-&lt;a href="index.html" target="_blank"&gt;Home&lt;/a&gt;
-                        </code></pre>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>Output :</h3>
-                        <a href="https://revolutionit.in" target="_blank">Visit Website</a><br>
-                        <a href="#">Home</a>
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Images</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>&lt;img src="whitelogo.png" alt="Logo"&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <img src="whitelogo.png" style="background-color: black;padding: 10px;width: 100%;">
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Iframe</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>&lt;iframe 
-src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15286.419512784008!2d74.2414699!3d16.6966444!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc725756de823d233!2sRevolution%20IT%20Solutions%20-%20Best%20Software%20Company%20in%20Kolhapur!5e0!3m2!1sen!2sin!4v1672054999605!5m2!1sen!2sin" 
-width="100%" height="450" 
-style="border:0;" allowfullscreen="" 
-loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;
-&lt;/iframe&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15286.419512784008!2d74.2414699!3d16.6966444!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc725756de823d233!2sRevolution%20IT%20Solutions%20-%20Best%20Software%20Company%20in%20Kolhapur!5e0!3m2!1sen!2sin!4v1672054999605!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-                <hr>
-                <h2>HTML Tables</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3>Code :</h3>
-                        <pre class="language-html"><code>&lt;table style="width:100%"&gt;
-    &lt;tr&gt;
-        &lt;th&gt;Company&lt;/th&gt;
-        &lt;th&gt;Contact&lt;/th&gt;
-        &lt;th&gt;Country&lt;/th&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;TATA&lt;/td&gt;
-        &lt;td&gt;Mr. ABC&lt;/td&gt;
-        &lt;td&gt;India&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;Google&lt;/td&gt;
-        &lt;td&gt;Mr. XYZ&lt;/td&gt;
-        &lt;td&gt;US&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-        &lt;td&gt;Microsoft&lt;/td&gt;
-        &lt;td&gt;Mr. PQR&lt;/td&gt;
-        &lt;td&gt;US&lt;/td&gt;
-        &lt;/tr&gt;
-&lt;/table&gt;</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Output :</h3>
-                        <table style="width:100%">
-                            <tr>
-                              <th>Company</th>
-                              <th>Contact</th>
-                              <th>Country</th>
-                            </tr>
-                            <tr>
-                              <td>TATA</td>
-                              <td>Mr. ABC</td>
-                              <td>India</td>
-                            </tr>
-                            <tr>
-                              <td>Google</td>
-                              <td>Mr. XYZ</td>
-                              <td>US</td>
-                            </tr>
-                            <tr>
-                                <td>Microsoft</td>
-                                <td>Mr. PQR</td>
-                                <td>US</td>
-                              </tr>
-                          </table>
-                    </div>
-                </div>
-<hr>
-<h2>HTML Inputs</h2>
-<div class="row">
-    <div class="col-md-6">
-        <h3>Code :</h3>
-        <pre class="language-html"><code>&lt;input type="text" placeholder="Text"&gt;&lt;br&gt;&lt;br&gt;
-&lt;input type="number" placeholder="Number"&gt;&lt;br&gt;&lt;br&gt;
-&lt;input type="email" placeholder="Email"&gt;&lt;br&gt;&lt;br&gt;
-&lt;input type="date" placeholder="Date"&gt;&lt;br&gt;&lt;br&gt;
-&lt;input type="password" placeholder="Password"&gt;&lt;br&gt;&lt;br&gt;
-&lt;button&gt;Submit&lt;/button&gt;</code></pre>
-    </div>
-    <div class="col-md-6">
-    <h3>Output :</h3>
-       <input type="text" placeholder="Text"><br><br>
-       <input type="number" placeholder="Number"><br><br>
-       <input type="email" placeholder="Email"><br><br>
-       <input type="date" placeholder="Date"><br><br>
-       <input type="password" placeholder="Password"><br><br>
-       <button>Submit</button>
-    </div>
-</div>
-<hr>
-<h2>HTML Attributes</h2>
-<ul>
-    <li>href - To redirect from <code class="w3-codespan">&lt;a&gt;</code></li>
-    <li>src - To give file path of image, iframe etc</li>
-    <li>style - To apply inline CSS properties</li>
-    <li>class - To apply specific CSS class </li>
-    <li>id - To give unique identification to tag so we can use this id for applying CSS or to access it in scripting language </li>
-</ul>
+&lt;div class="text-center"&gt;
+    &lt;h1 class="display-4"&gt;Welcome&lt;/h1&gt;
+    &lt;h2&gt;Value from Controller&lt;/h2&gt;
+    &lt;ul&gt;
+        &lt;li&gt;Student Id - @Model.Id&lt;/li&gt;
+        &lt;li&gt;Student Name - @Model.Name&lt;/li&gt;
+        &lt;li&gt;Student City - @Model.City&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;Learn about &lt;a href="https://docs.microsoft.com/aspnet/core"&gt;building Web apps with ASP.NET Core&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                
+              
               
             </div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
 
-        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="whitelogo.png" style="height: 40px;"></a>
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
 
 
 
