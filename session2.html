@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 2</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Working with List (Controller -> View)</li>
+                    <li>Creating New Controller</li>
+                    <li>Adding View to Controller Methods</li>
+                    <li>Intoduction:Entity Framework Core</li>
+                    <li>Core Components of EF Core</li>
+                    <li>Entity Framework Core Methods</li>
+                    <li>Installing EF Core package</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Working of List (Controller -> View)</h2>
+                <h3>Example:</h3>
+                <h4>Controller File</h4>
+                <pre class="language-csharp"><code>public IActionResult Index()
+{
+    List&lt;Students&gt; students = new List&lt;Students&gt;();
+    students.Add(new Students { Id=1,Name="Ram",City="Pune"});
+    students.Add(new Students { Id=2,Name="Shree",City="Mumbai"});
+    students.Add(new Students { Id=2,Name="Subhash",City="Kolkata"});
+    students.Add(new Students { Id=3,Name="Narendra",City="Chennai"});
+    return View(students);
+}</code></pre>
+                <h4>View File</h4>
+                <pre class="language-html"><code>@model List&lt;Students&gt;
+@{
+    ViewData["Title"] = "Home Page";
+}
+                    
+&lt;div class="text-center"&gt;
+                    
+    &lt;h1 class="display-4"&gt;Welcome&lt;/h1&gt;
+    &lt;h2&gt;Value from Controller&lt;/h2&gt;
+    @foreach (var student in Model)
+    {
+        &lt;h2&gt;@student.Name&lt;/h2&gt;
+        &lt;h3&gt;@student.Id&lt;/h3&gt;
+        &lt;h3&gt;@student.City&lt;/h3&gt;
+        &lt;hr /&gt;
+    }
+                       
+    &lt;p&gt;Learn about &lt;a href="https://docs.microsoft.com/aspnet/core"&gt;building Web apps with ASP.NET Core&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                
+                <hr>
+                <h2>Creating New Controller</h2>
+               <p>Right click on "Contollers" folder -> Add -> Controller -> MVC Contoller - Empty -> Enter Name ->Add</p>
+               <h3>Example:</h3>
+               <h4>Controller File</h4>
+               <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+namespace Test.Web.Controllers
+{
+    public class AboutController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult History()
+        {
+            return View();
+        }
+    }
+}</code></pre>
+<hr>
+<h2>Adding View to Controller Methods</h2>
+<p>Right click on Method Name -> Add View -> Razor View</p>
+<h3>Example : View File (Index.cshtml)</h3>
+<pre class="language-html"><code>@{
+    ViewData["Title"] = "About Company";
+}
+
+&lt;div class="container"&gt;
+    &lt;h1&gt;About Company&lt;/h1&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-12"&gt;
+            &lt;p&gt;At [Company Name], we are dedicated to revolutionizing the way [industry/niche] operates. Established in [year], we have been at the forefront of innovation, consistently delivering cutting-edge solutions to meet the evolving needs of our clients.&lt;/p&gt;
+            &lt;p&gt;Our mission is simple: to empower businesses with the tools and technologies they need to thrive in today's competitive landscape. Whether you're a small startup or a multinational corporation, we tailor our services to suit your unique requirements, ensuring maximum efficiency and profitability.&lt;/p&gt;
+            &lt;a asp-action="History" class="btn btn-primary"&gt;Company History&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<h3>Example : View File (History.cshtml)</h3>
+<pre class="language-html"><code>@{
+    ViewData["Title"] = "Company History";
+}
+
+&lt;h1&gt;Company History&lt;/h1&gt;
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-12"&gt;
+            &lt;p&gt;
+                Since our inception in [year], [Company Name] has been synonymous with innovation and excellence in the [industry/niche] sector. What began as a humble startup with a vision to disrupt the status quo has evolved into a leading force in the industry, shaping the way businesses operate and thrive in the modern world.
+
+            &lt;/p&gt;
+            &lt;p&gt;In our early days, [Founder's Name], our visionary founder, recognized a gap in the market and seized the opportunity to fill it. Armed with determination and a relentless pursuit of excellence, [Founder's Name] laid the foundation for what would become [Company Name]'s legacy of innovation.&lt;/p&gt;
+            &lt;a asp-action="Index" class="btn btn-primary"&gt;Back&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<hr>
+<h2>Intoduction:Entity Framework Core</h2>
+<p>Entity Framework Core (EF Core) is a powerful and versatile object-relational mapping (ORM) framework developed by Microsoft. It is designed to simplify the process of working with relational databases in .NET applications by providing a high-level abstraction over the underlying database schema.</p>
+<ul>
+    <li><strong>Object-Relational Mapping (ORM):</strong> EF Core enables developers to work with database entities as .NET objects, abstracting away the complexities of database interactions. This allows developers to focus on business logic rather than database management tasks.</li>
+    <li><strong>Cross-Platform and Lightweight:</strong> EF Core is a cross-platform framework that runs on .NET Core, .NET Framework, and Xamarin. It is also lightweight compared to its predecessor, Entity Framework 6, making it suitable for use in a wide range of applications, including web, desktop, and mobile.</li>
+    <li><strong>Code-First Approach:</strong> With EF Core, developers can define their database schema using C# or VB.NET code, known as the "code-first" approach. This allows for greater flexibility and control over the database model, making it easier to work with databases that evolve over time.</li>
+    <li><strong>Support for Multiple Database Providers:</strong> EF Core supports a variety of database providers, including SQL Server, PostgreSQL, MySQL, SQLite, and more. This flexibility allows developers to choose the database that best suits their application requirements without being tied to a specific platform.</li>
+    <li><strong>LINQ Integration:</strong> EF Core seamlessly integrates with Language Integrated Query (LINQ), allowing developers to write expressive and type-safe queries directly against their entity classes. This simplifies the process of querying and manipulating data, leading to more maintainable and readable code.</li>
+    <li><strong>Migration Support:</strong> EF Core includes built-in support for database migrations, making it easy to evolve the database schema alongside the application code. Developers can use migrations to automatically apply schema changes, ensuring database consistency across different environments.</li>
+    <li><strong>Performance Optimization:</strong> EF Core offers various features and optimizations to improve performance, such as query caching, lazy loading, and compiled queries. These optimizations help minimize database round-trips and improve overall application performance.</li>
+  </ul>
+<hr>
+<h2>Core Components of EF Core</h2>
+              <ul>
+                <li><b>DbContext: </b>It is the primary class that is responsible for interacting with the database. It represents a session with the database and can be used to query and save instances of your entities.</li>
+                <li><b>DbSet&lt;TEntity&gt;:</b> It is a property on the DbContext that allows querying and saving of entities. Each DbSet corresponds to a table in the database.</li>
+                <li><b>Entity:</b> A class that represents a table in the database.</li>
+                <li><b>Migration:</b> A way to manage and apply schema changes to the database, like creating tables or adding new columns.</li>
+              </ul>
+              <hr>
+              <h2>Entity Framework Core Methods</h2>
+              <table class="table table-bordered">
+                <tr>
+                  <th>Method</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td><code>Add</code></td>
+                  <td>Adds a new entity to the context.</td>
+                </tr>
+                <tr>
+                  <td><code>Remove</code></td>
+                  <td>Removes an entity from the context.</td>
+                </tr>
+                <tr>
+                  <td><code>Update</code></td>
+                  <td>Updates the properties of an existing entity in the context.</td>
+                </tr>
+                <tr>
+                  <td><code>SaveChanges</code></td>
+                  <td>Saves all changes made in the context to the underlying database.</td>
+                </tr>
+                <tr>
+                  <td><code>Find</code></td>
+                  <td>Finds an entity with the given primary key values.</td>
+                </tr>
+                <tr>
+                  <td><code>FirstOrDefault</code>/<code>SingleOrDefault</code>/<code>First</code>/<code>Single</code></td>
+                  <td>Executes a query and returns the first matching entity or null if no matching entity is found.</td>
+                </tr>
+                <tr>
+                  <td><code>ToList</code>/<code>ToListAsync</code>/<code>ToArray</code></td>
+                  <td>Executes a query asynchronously and returns the result as a list or array.</td>
+                </tr>
+                <tr>
+                  <td><code>Include</code></td>
+                  <td>Specifies related entities to be included in the query results.</td>
+                </tr>
+                <tr>
+                  <td><code>OrderBy</code>/<code>ThenBy</code></td>
+                  <td>Specifies ordering criteria for query results.</td>
+                </tr>
+                
+                <tr>
+                  <td><code>FromSqlRaw</code></td>
+                  <td>Executes a SQL query directly on the database and returns the results as entities.</td>
+                </tr>
+              </table>
+              <hr>
+              <h2>Installing EF Core package</h2>
+              <p>Right click on Project Name -> Manage NuGet Packages -> Search - Microsoft.EntityFrameworkCore.SqlServer -> Select Version - 7.0.11 -> Install </p>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

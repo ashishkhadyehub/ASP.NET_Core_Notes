@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 3</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Creating ApplicationDbContext class</li>
+                    <li>Setting up connectionString in appSettings.json</li>
+                    <li>Passing connectionString to ApplicationDbContext</li>
+                    <li>Adding DbSet to ApplicationDbContext </li>
+                    <li>Database Migration</li>
+                    <li>Migration Commands</li>
+                    <li>Updating Database with Migration</li>
+                   
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Creating ApplicationDbContext class</h2>
+                <p>Create folder - "Data" -> Right click on folder -> Add -> New Empty File -> ApplicationDbContext.cs </p>
+                <p>ApplicationDbContext class must be inhereted from DbContext</p>
+                <p>We have to crate constructor of ApplicationDbContext to establish connection with database </p>
+                <h3>Example:</h3>
+                <h4>ApplicationDbContext.cs File</h4>
+                <pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+                    
+namespace Test.Web.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        //creating constructor
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        {
+            
+        }  
+    }
+}</code></pre>
+<hr>
+<h2>Setting up connectionString in appSettings.json</h2>
+               
+<h3>Example:</h3>
+<h4>appSettings.json File</h4>
+               <pre class="language-js"><code>{
+"ConnectionStrings": {
+    "DefaultConnection": "Server=ASHISH\\SQLEXPRESS;Database=TestDB;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true;encrypt=false"
+},
+"Logging": {
+    "LogLevel": {
+    "Default": "Information",
+    "Microsoft.AspNetCore": "Warning"
+    }
+},
+"AllowedHosts": "*"
+}</code></pre>
+<hr>
+<h2>Passing connectionString to ApplicationDbContext</h2>
+<p>We have to pass connectionString to ApplicationDbContext from Program.cs </p>
+<h3>Example</h3>
+<h4>Program.cs File</h4>
+<pre class="language-csharp"><code>var builder = WebApplication.CreateBuilder(args);
+//passing connectionString to ApplicationDbContext class
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));</code></pre>
+
+
+<hr>
+<h2>Adding DbSet to ApplicationDbContext</h2>
+<p>DbSet corresponds to a table in the database</p>
+<h3>Example:</h3>
+                <h4>ApplicationDbContext.cs File</h4>
+                <pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+                    
+namespace Test.Web.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        //creating constructor
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        {
+            
+        }
+        
+        //adding DbSet
+        DbSet&lt;Students&gt; Students { get; set; }
+    }
+}</code></pre>
+<hr>
+<h2>Database Migration</h2>
+<p>Database migration in Entity Framework Core refers to the process of changing the database schema (structure) to match changes in the application's data model.</p>
+<p>To perform migration, we have to install - Microsoft.EntityFrameworkCore.Tools Packge</p>
+<p>Right click on Project Name -> Manage NuGet Packages -> Search - Microsoft.EntityFrameworkCore.Tools -> Select Version - 7.0.11 -> Install</p>
+<hr>
+<h2>Migration Commands</h2>
+<p>We can perform Migrations through Package Manager Console</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Command</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>add-migration MigrationName</td>
+            <td>Creates a new migration based on the changes detected in your DbContext.</td>
+        </tr>
+        <tr>
+            <td>update-database</td>
+            <td>Applies any pending migrations to the database, updating its schema to match the current model.</td>
+        </tr>
+        <tr>
+            <td>remove-migration</td>
+            <td>Removes the last migration snapshot and reverts the model snapshot to the previous one.</td>
+        </tr>
+        <tr>
+            <td>get-migrations</td>
+            <td>Lists all migrations that have been applied or haven't been applied yet.</td>
+        </tr>
+        <tr>
+            <td>script-migration</td>
+            <td>Generates a SQL script instead of applying migrations directly to the database.</td>
+        </tr>
+    </tbody>
+</table>
+<hr>
+<h2>Updating Database with Migration</h3>  
+<p>Steps: Tools->NuGet Package Manager->Package Manager Console -> write migration command ->Enter</p>
+<h3>Example:</h3>
+<pre class="language-c"><code>PM> add-migration initial
+Build started...
+Build succeeded.
+To undo this action, use Remove-Migration.
+</code></pre>
+<p>After executing above commands, "Migrations" folder will be created in Project</p>
+<p>To update database with this migration we can exexute below command</p>
+<pre class="language-c"><code>PM> update-database</code></pre>
+              
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

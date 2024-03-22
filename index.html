@@ -37,8 +37,25 @@
                 border-bottom: 1px solid #aaa;
                 margin-bottom: .5em;
             }
-    </style>
 
+            
+    </style>
+<style>
+    /* Apply border bottom to each li except the last one */
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    li {
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+    
+    li:last-child {
+      border-bottom: none; /* Remove border bottom for the last li */
+    }
+  </style>
 </head>
 
 <body>
@@ -61,8 +78,8 @@
                 <details open="">
                     <summary>Section 1 : Getting Started</summary>
                     <ul>
-                        <li><a href="session1.html">Session 1 : Introduction, Creating New Project, Directory Structure,Controller to View working,Models</a></li>
-                        
+                        <li><a href="session1.html"><b>Session 1 :</b> Introduction, Creating New Project, Directory Structure,Controller to View working,Models</a></li>
+                        <li><a href="session2.html"><b>Session 2 :</b> Working with List, Creating New Controller, Adding View to Controller Methods, Intoduction:Entity Framework Core, Core Components of EF Core, Entity Framework Core Methods, Installing EF Core package</a></li>
                     </ul>
                 </details>
 
