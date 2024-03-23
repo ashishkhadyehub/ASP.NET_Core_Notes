@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 4</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Dependency Injection</li>
+                    <li>Using ApplicationDbContext in Controller</li>
+                    <li>Select data from Database using EF Core</li>
+                    <li>Creating View with Template & Model</li>
+                   <li>[HttpGet] & [HttpPost] attributes</li>
+                   <li>asp-for attribute</li>
+                   <li>Insert data in Database using EF Core</li>
+                   <li>Create links to redirect </li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Dependency Injection</h2>
+                <ul>
+                    <li>Dependency Injection (DI) is a design pattern used to manage dependencies between objects.</li>
+                    <li>It allows you to decouple components by providing dependencies rather than having them create their own.</li>
+                    <li>.NET Core provides a built-in dependency injection container, which is responsible for managing the lifetime and resolution of services.</li>
+                    <li>Services can have different lifetimes: transient, scoped, and singleton. This determines how instances of services are created and managed by the DI container.</li>
+                    <li>The preferred method for injecting dependencies into classes is through constructor injection. Dependencies are provided as constructor parameters.</li>
+                </ul>
+                <h3>Lifetimes of Services</h3>
+                <ul>
+                    <li><b>Transient: </b>Transient services are created each time they are requested.</li>
+                    <li><b>Scoped: </b>Scoped services are created once per client request (i.e., per HTTP request).</li>
+                    <li><b>Singleton: </b>Singleton services are created only once during the lifetime of the application.</li>
+                </ul>
+                <hr>
+                <h2>Using ApplicationDbContext class in Controller</h2>
+                <ul>
+                    <li>Create ApplicationDbContext field in Controller </li>
+                    <li>Inject ApplicationDbContext in Controller using constructor </li>
+                </ul>
+              
+                <h3>Example:</h3>
+                <h4>Controller File</h4>
+                <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Web.Data;
+                    
+namespace Test.Web.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+                    
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+                    
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}</code></pre>
+<hr>
+<h2>Select data from Database using EF Core</h2>
+<p>We can select data from database using ToList method</p>
+<h3>Example:</h3>
+<h4>Controller File</h4>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Web.Data;
+using Test.Web.Models;
+    
+namespace Test.Web.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+    
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+    
+        public IActionResult Index()
+        {
+            var students = _context.Students.ToList();
+            return View(students);
+        }
+            
+    }
+}</code></pre>
+<hr>
+<h2>Creating View with Template & Model</h2>
+<p>Right click on Method Name -> Add View -> Razor View -> Select Template -> Select Model Class -> Add </p>
+               
+<h3>Example:</h3>
+<h4>View File</h4>
+<pre class="language-html"><code>@model IEnumerable&lt;Test.Web.Models.Students&gt;
+
+@{
+    ViewData["Title"] = "Index";
+}
+    
+&lt;h1&gt;Index&lt;/h1&gt;
+    
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Id)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Name)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.City)
+            &lt;/th&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Name)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.City)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h2>[HttpGet] & [HttpPost] attributes</h2>
+<ul>
+    <li><b>[HttpGet] : </b>It is typically used for actions that retrieve data or perform read-only operations.</li>
+    <li><b>[HttpPost] : </b>It is commonly used for actions that submit OR modify data</li>
+</ul>
+<hr>
+<h2>asp-for attribute</h2>
+<ul>
+    <li>In Razor views, the asp-for attribute is used to bind HTML form elements to properties of a model. It's part of the Razor syntax that simplifies data binding and reduces the likelihood of errors when working with form elements.</li>
+    <li>It sets - type,id,name,value attributes for HTML elements</li>
+</ul>
+<hr>
+<h2>Insert data in Database using EF Core</h2>
+<h3>Steps</h3>
+<ol>
+    <li>Add Create[HttpGet] method in Controller</li>
+    <li>Add Razor View with Template(List) and Model</li>
+    <li>Update View if required</li>
+    <li>Add Create[HttpPost] method in Controller, use Add method to insert model in database</li>
+</ol>
+<h3>Example:</h3>
+<h4>Controller File</h4>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Web.Data;
+using Test.Web.Models;
+    
+namespace Test.Web.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+    
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+    
+        public IActionResult Index()
+        {
+            var students = _context.Students.ToList();
+            return View(students);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+    
+        [HttpPost]
+        public IActionResult Create(Students student)
+        {
+            _context.Students.Add(student);
+            _context.SaveChanges();
+    
+            //after adding new student,redirecting to the student list i.e. Index method
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>View File</h4>
+<pre class="language-html">
+<code>@model Test.Web.Models.Students
+@{
+    ViewData["Title"] = "Create";
+}
+    
+&lt;h1&gt;Add New Student&lt;/h1&gt;
+    
+    
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+                
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="City" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="City" class="form-control" /&gt;
+                &lt;span asp-validation-for="City" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+    
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code>
+</pre>
+<hr>
+<h2>Create links to redirect</h2>
+<h3>Example: View File</h3>
+<pre class="language-html"><code>&lt;li class="nav-item"&gt;
+    @* asp-controller- Controller name
+    asp-action- Action/Method name *@
+    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index"&gt;Student List&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
+
+              
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

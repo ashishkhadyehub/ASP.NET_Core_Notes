@@ -195,14 +195,17 @@ namespace Test.Web.Data
         }
         
         //adding DbSet
-        DbSet&lt;Students&gt; Students { get; set; }
+        public DbSet&lt;Students&gt; Students { get; set; }
     }
 }</code></pre>
 <hr>
 <h2>Database Migration</h2>
-<p>Database migration in Entity Framework Core refers to the process of changing the database schema (structure) to match changes in the application's data model.</p>
-<p>To perform migration, we have to install - Microsoft.EntityFrameworkCore.Tools Packge</p>
-<p>Right click on Project Name -> Manage NuGet Packages -> Search - Microsoft.EntityFrameworkCore.Tools -> Select Version - 7.0.11 -> Install</p>
+<ul>
+    <li>Database migration in Entity Framework Core refers to the process of changing the database schema (structure) to match changes in the application's data model.</li>
+    <li>To perform migration, we have to install - Microsoft.EntityFrameworkCore.Tools Packge</li>
+    <li>Right click on Project Name -> Manage NuGet Packages -> Search - Microsoft.EntityFrameworkCore.Tools -> Select Version - 7.0.11 -> Install</li>
+</ul>
+
 <hr>
 <h2>Migration Commands</h2>
 <p>We can perform Migrations through Package Manager Console</p>

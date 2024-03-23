@@ -1,17 +1,35 @@
+@model Test.Web.Models.Students
+
 @{
-    ViewData["Title"] = "Company History";
+    ViewData["Title"] = "Create";
 }
 
-&lt;h1&gt;Company History&lt;/h1&gt;
-&lt;div class="container"&gt;
-    &lt;div class="row"&gt;
-        &lt;div class="col-12"&gt;
-            &lt;p&gt;
-                Since our inception in [year], [Company Name] has been synonymous with innovation and excellence in the [industry/niche] sector. What began as a humble startup with a vision to disrupt the status quo has evolved into a leading force in the industry, shaping the way businesses operate and thrive in the modern world.
+&lt;h1&gt;Add New Student&lt;/h1&gt;
 
-            &lt;/p&gt;
-            &lt;p&gt;In our early days, [Founder's Name], our visionary founder, recognized a gap in the market and seized the opportunity to fill it. Armed with determination and a relentless pursuit of excellence, [Founder's Name] laid the foundation for what would become [Company Name]'s legacy of innovation.&lt;/p&gt;
-            &lt;a asp-action="Index" class="btn btn-primary"&gt;Back&lt;/a&gt;
-        &lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="City" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="City" class="form-control" /&gt;
+                &lt;span asp-validation-for="City" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
     &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
 &lt;/div&gt;
