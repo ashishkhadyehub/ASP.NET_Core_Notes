@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 5</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Update data using EF Core</li>
+                    <li>Delete data using EF Core</li>
+                    <li>Layered Architecture</li>
+                    <li>3-Tier Architecture</li>
+                    <li>Repository Pattern</li>
+                    <li>Project Setup using Layered Architecture</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Update data using EF Core</h2>
+                <h3>Steps:</h3>
+                <ol>
+                    <li>Make required changes in "Index" view - pass Id for edit & delete</li>
+                    <li>Create [HttpGet] Edit Method which will receive Id</li>
+                    <li>Find Model from database by using Id</li>
+                    <li>Pass model to View</li>
+                    <li>Add Edit View with Template & Model</li>
+                    <li>Make required changes in View - update Id as hidden</li>
+                    <li>Create [HttpPost] Edit Method which will receive Model to update</li>
+                    <li>Update received model by using Update method</li>
+                </ol>
+                <h3>Example</h3>
+                <h4>View File: Index</h4>
+                <pre class="language-html"><code>@model IEnumerable&lt;Test.Web.Models.Students&gt;
+@{
+    ViewData["Title"] = "Index";
+}
+    
+&lt;h1&gt;Index&lt;/h1&gt;
+    
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Id)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Name)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.City)
+            &lt;/th&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Name)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.City)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                   
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+                <h4>Controller File:</h4>
+                <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Web.Data;
+using Test.Web.Models;
+
+namespace Test.Web.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+           var students = _context.Students.ToList();
+           return View(students);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Students student)
+        {
+            _context.Students.Add(student);
+            _context.SaveChanges();
+
+            //after adding new student,redirecting to the student list i.e. Index method
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var student = _context.Students.Find(id);
+            return View(student);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Students student)
+        {
+            _context.Students.Update(student);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>View File : Edit</h4>
+<pre class="language-html"><code>@model Test.Web.Models.Students
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+&lt;h4&gt;Students&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                
+                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="City" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="City" class="form-control" /&gt;
+                &lt;span asp-validation-for="City" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Update" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<hr>
+<h2>Delete data using EF Core</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Create [HttpGet] Delete Method which will receive Id</li>
+    <li>Find Model from database by using Id</li>
+    <li>Pass model to View</li>
+    <li>Add Delete View with Template & Model - to Confirm delete action</li>
+    <li>Create [HttpPost] Delete Method which will receive Model to delete</li>
+    <li>Delete received model by using Remove method</li>
+</ol>
+<h3>Example</h3>
+<h4>Controller File:</h4>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Web.Data;
+using Test.Web.Models;
+
+namespace Test.Web.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+           var students = _context.Students.ToList();
+           return View(students);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Students student)
+        {
+            _context.Students.Add(student);
+            _context.SaveChanges();
+
+            //after adding new student,redirecting to the student list i.e. Index method
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var student = _context.Students.Find(id);
+            return View(student);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Students student)
+        {
+            _context.Students.Update(student);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var student = _context.Students.Find(id);
+            return View(student);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Students student)
+        {
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>View File: Delete</h4>
+<pre class="language-html"><code>@model Test.Web.Models.Students
+@{
+    ViewData["Title"] = "Delete";
+}
+&lt;h3&gt;Are you sure you want to delete this Student Data?&lt;/h3&gt;
+&lt;div&gt;
+   
+    
+    &lt;dl class="row"&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Id)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Id)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Name)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Name)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.City)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.City)
+        &lt;/dd&gt;
+    &lt;/dl&gt;
+    
+    &lt;form asp-action="Delete"&gt;
+        &lt;input type="submit" value="Delete" class="btn btn-danger" /&gt; |
+        &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre>        
+<hr>
+<h2>Layered Architecture</h2>
+<p>Layered architecture in .NET Core MVC refers to organizing your application's codebase into distinct layers, each responsible for different concerns. This approach promotes modularity, separation of concerns, and maintainability</p>
+<hr>
+<h2>3-Tier Architecture</h2>
+<p>3-tier architecture refers to a design pattern that divides an application into three distinct layers, each responsible for specific aspects of functionality.</p>
+<ul>
+    <li><b>Presentation Layer (UI): </b>This layer is responsible for presenting the user interface to the end-users and handling user interactions.</li>
+    <li><b>Business Logic Layer (Service Layer): </b>The business logic layer contains the core logic of the application. It encapsulates the business rules, workflows, and operations performed by the application. </li>
+    <li><b>Data Access Layer (Data Layer): </b>The data access layer is responsible for interacting with the data storage mechanisms, such as databases or external services. It encapsulates the logic for querying, inserting, updating, and deleting data from the underlying database</li>
+</ul>
+<hr>
+<h2>Repository Pattern</h2>
+<p>Repository Pattern is used to separate the logic that retrieves data from the underlying data source (such as a database) from the rest of the application,it is intended to create an abstraction layer between the data access layer and the business logic layer of an application.</p>
+<h3>Steps:</h3>
+<ol>
+    <li>Define your model</li>
+    <li>Create a repository interface</li>
+    <li>Implement the repository</li>
+    <li>Configure Dependency Injection (in Program.cs)</li>
+    <li>Use the repository in your controllers</li>
+</ol>
+<hr>
+<h2>Project Setup using Layered Architecture</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Create Class Library Project to store Models</li>
+    <li>Create Class Library Project to implement Data Access & Business Logic</li>
+    <li>Create  ASP.NET Core Web App to implement UI</li>
+    <li>Add project reference of Model project to Data Access Project</li>
+    <li>Add project reference of Data Access Project to UI Project</li>
+</ol>
+
+
+              
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

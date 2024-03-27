@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 6</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Relationship between Models</li>
+                    <li>Navigation Property</li>
+                    <li>Applying Migration in Layred Architecture</li>
+                    <li>Adding Interfaces in Repository Project</li>
+                    <li>Implementing Interfaces </li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Relationship between Models</h2>
+                <ul>
+                    <li><b>One-to-One Relationship:</b> In a one-to-one relationship, each instance of one class is associated with exactly one instance of another class, and vice versa (e.g.- User -> Address)</li>
+                    <li><b>One-to-Many Relationship:</b> In a one-to-many relationship, each instance of one class can be associated with multiple instances of another class, but each instance of the other class is associated with only one instance of the first class. (e.g.- Department->Employee)</li>
+                    <li><b>Many-to-One Relationship:</b> A many-to-one relationship is essentially the inverse of a one-to-many relationship. Each instance of one class can be associated with only one instance of another class, but each instance of the other class can be associated with multiple instances of the first class. (e.g.- Products->Category)</li>
+                    <li><b>Many-to-Many Relationship:</b> In a many-to-many relationship, instances of one class can be associated with multiple instances of another class, and vice versa. (e.g.-Stuents->Courses)</li>
+                </ul>
+                <hr>
+                <h2>Navigation Property</h2>
+                <ul>
+                <li>A navigation property is a property on a class that allows navigation from one class instance to related instances in another class.</li>
+                <li>Navigation property is used to represent relationships between entities/classes.</li>
+                <li><b>IEnumerable:</b> It is used to represent a sequence of items that can be iterated over.</li>
+                <li><b>ICollection:</b> In Entity Framework Core, and more broadly in ORM frameworks, ICollection is often used as the type for navigation properties that represent a collection of related entities.</li>
+                <li><b>HashSet: HashSet is a collection type in .NET that represents a set of unique elements,Unlike lists or arrays, HashSet does not allow duplicate elements.</b></li>
+                </ul>
+                
+                <h3>Example</h3>
+                <h4>Class File: Country Model</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Entities
+{
+    public class Country
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = "Bharat";
+
+        //Navigation Property
+        public ICollection &lt;State&gt; states { get; set; }= new HashSet&lt;State&gt;();
+    }
+}</code></pre>
+                <h4>Class File: State Model</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Entities
+{
+    public class State
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = "Maharashtra";
+
+        public int CountryId { get; set; }
+
+        //Navigation Property
+        public Country Country { get; set; } = new();
+
+        //Navigation Property
+        public ICollection &lt;District&gt; districts { get; set; } = new HashSet&lt;District&gt;();
+    }
+}</code></pre>
+<h4>Class File: District Model</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Entities
+{
+    public class District
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = "Kolhapur";
+
+        public int CityId { get; set; }
+
+        //Navigation Property
+        public State State { get; set; } = new();
+    }
+}</code></pre>
+<hr>
+<h2>Applying Migration in Layred Architecture</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Install/Add EF Core package reference in Repository project</li>
+    <li>Create ApplicationDbContext class-Create Constructor and pass DbContextOptions</li>
+    <li>Add DbSets in ApplicationDbContext</li>
+    <li>Setup ConnectionString in appSettings.json</li>
+    <li>pass connectionString to ApplicationDbContext from Program.cs</li>
+    <li>Install/Add EF Core tools package reference to UI project </li>
+    <li>Set UI project as startup project</li>
+    <li>Open Package Manager Console -> Select Project (UI) -> apply migration </li>
+    <li>Add MigrationsAssembly in program.cs as suggested in PM</li>
+    <li>Apply migration again and update database</li>
+</ol>
+<hr>
+<h2>Adding Interfaces in Repository Project</h2>
+<p>In the Repository Pattern, interfaces play a significant role in defining contracts for data access operations. Interfaces provide a way to define the operations that a repository should support without specifying how those operations are implemented.</p>
+<h3>Steps:</h3>
+<ol>
+    <li>Create new folder-"Interfaces"- in Repository project</li>
+    <li>Create new Intefaces in folder (name must start with I)</li>
+    <li>Write required method signatures in Intefaces</li>
+</ol>
+<h4>Example: Inteface File</h4>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface ICountryRepo
+    {
+        IEnumerable&lt;Country&gt; GetAll();
+
+        Country GetById(int id);
+
+        void Save(Country country);
+
+        void Edit(Country country);
+
+        void RemoveData(Country country);
+
+
+    }
+}</code></pre>
+<hr>
+<h2>Implementing Interfaces</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Create new folder-"Implementations"- in Repository project</li>
+    <li>Create class file</li>
+    <li>Inherit this new class with respective Inteface</li>
+    <li>Implement Inteface</li>
+    <li>Create ApplicationDbContext field in class</li>
+    <li>Inject ApplicationDbContext in class using constructor</li>
+    <li>Write method definations using EF Core</li>
+</ol>
+<h4>Example: Class File</h4>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class CountryRepo : ICountryRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public CountryRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public void Edit(Country country)
+        {
+            _context.Countries.Update(country);
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<Country> GetAll()
+        {
+            var countries = _context.Countries.ToList();
+            return countries;
+        }
+
+        public Country GetById(int id)
+        {
+            var country = _context.Countries.Find(id);
+            return country;
+        }
+
+        public void RemoveData(Country country)
+        {
+            _context.Remove(country);
+            _context.SaveChanges();
+        }
+
+        public void Save(Country country)
+        {
+           _context.Add(country);
+            _context.SaveChanges();
+        }
+    }
+}
+
+</code></pre>
+
+              
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
