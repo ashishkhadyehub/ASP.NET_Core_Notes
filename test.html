@@ -1,30 +1,22 @@
-
-
-
-@model Test.Web.Models.Students
+@model Test.Entities.Country
 
 @{
     ViewData["Title"] = "Create";
 }
 
-&lt;h1&gt;Add New Student&lt;/h1&gt;
+&lt;h1&gt;Create&lt;/h1&gt;
 
-
+&lt;h4&gt;Country&lt;/h4&gt;
 &lt;hr /&gt;
 &lt;div class="row"&gt;
     &lt;div class="col-md-4"&gt;
         &lt;form asp-action="Create"&gt;
             &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
-            
+          
             &lt;div class="form-group"&gt;
                 &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
                 &lt;input asp-for="Name" class="form-control" /&gt;
                 &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="City" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="City" class="form-control" /&gt;
-                &lt;span asp-validation-for="City" class="text-danger"&gt;&lt;/span&gt;
             &lt;/div&gt;
             &lt;div class="form-group"&gt;
                 &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
@@ -37,127 +29,6 @@
     &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
 &lt;/div&gt;
 
-@model Test.Web.Models.Students
-
-@{
-    ViewData["Title"] = "Edit";
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-&lt;h1&gt;Edit&lt;/h1&gt;
-
-&lt;h4&gt;Students&lt;/h4&gt;
-&lt;hr /&gt;
-&lt;div class="row"&gt;
-    &lt;div class="col-md-4"&gt;
-        &lt;form asp-action="Edit"&gt;
-            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                
-                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
-                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="Name" class="form-control" /&gt;
-                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="City" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="City" class="form-control" /&gt;
-                &lt;span asp-validation-for="City" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;input type="submit" value="Update" class="btn btn-primary" /&gt;
-            &lt;/div&gt;
-        &lt;/form&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div&gt;
-    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
-&lt;/div&gt;
-
-@model IEnumerable&lt;Test.Web.Models.Students&gt;
-
-    @{
-        ViewData["Title"] = "Index";
-    }
-    
-    &lt;h1&gt;Index&lt;/h1&gt;
-    
-    &lt;p&gt;
-        &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
-    &lt;/p&gt;
-    &lt;table class="table"&gt;
-        &lt;thead&gt;
-            &lt;tr&gt;
-                &lt;th&gt;
-                    @Html.DisplayNameFor(model =&gt; model.Id)
-                &lt;/th&gt;
-                &lt;th&gt;
-                    @Html.DisplayNameFor(model =&gt; model.Name)
-                &lt;/th&gt;
-                &lt;th&gt;
-                    @Html.DisplayNameFor(model =&gt; model.City)
-                &lt;/th&gt;
-                &lt;th&gt;&lt;/th&gt;
-            &lt;/tr&gt;
-        &lt;/thead&gt;
-        &lt;tbody&gt;
-    @foreach (var item in Model) {
-            &lt;tr&gt;
-                &lt;td&gt;
-                    @Html.DisplayFor(modelItem =&gt; item.Id)
-                &lt;/td&gt;
-                &lt;td&gt;
-                    @Html.DisplayFor(modelItem =&gt; item.Name)
-                &lt;/td&gt;
-                &lt;td&gt;
-                    @Html.DisplayFor(modelItem =&gt; item.City)
-                &lt;/td&gt;
-                &lt;td&gt;
-                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                   
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                &lt;/td&gt;
-            &lt;/tr&gt;
-    }
-        &lt;/tbody&gt;
-    &lt;/table&gt;
-
-    -----------
-@model Test.Web.Models.Students
-
-@{
-    ViewData["Title"] = "Delete";
-}
-&lt;h3&gt;Are you sure you want to delete this Student Data?&lt;/h3&gt;
-&lt;div&gt;
-   
-    
-    &lt;dl class="row"&gt;
-        &lt;dt class = "col-sm-2"&gt;
-            @Html.DisplayNameFor(model =&gt; model.Id)
-        &lt;/dt&gt;
-        &lt;dd class = "col-sm-10"&gt;
-            @Html.DisplayFor(model =&gt; model.Id)
-        &lt;/dd&gt;
-        &lt;dt class = "col-sm-2"&gt;
-            @Html.DisplayNameFor(model =&gt; model.Name)
-        &lt;/dt&gt;
-        &lt;dd class = "col-sm-10"&gt;
-            @Html.DisplayFor(model =&gt; model.Name)
-        &lt;/dd&gt;
-        &lt;dt class = "col-sm-2"&gt;
-            @Html.DisplayNameFor(model =&gt; model.City)
-        &lt;/dt&gt;
-        &lt;dd class = "col-sm-10"&gt;
-            @Html.DisplayFor(model =&gt; model.City)
-        &lt;/dd&gt;
-    &lt;/dl&gt;
-    
-    &lt;form asp-action="Delete"&gt;
-        &lt;input type="submit" value="Delete" class="btn btn-danger" /&gt; |
-        &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
-    &lt;/form&gt;
-&lt;/div&gt;

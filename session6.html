@@ -286,7 +286,7 @@ namespace Test.Repositories.Implementations
             _context.SaveChanges();
         }
 
-        public IEnumerable<Country> GetAll()
+        public IEnumerable&lt;Country&gt; GetAll()
         {
             var countries = _context.Countries.ToList();
             return countries;
