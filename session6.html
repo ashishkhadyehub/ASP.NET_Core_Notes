@@ -172,7 +172,7 @@ namespace Test.Entities
         public int CountryId { get; set; }
 
         //Navigation Property
-        public Country Country { get; set; } = new();
+        public Country? Country { get; set; }
 
         //Navigation Property
         public ICollection &lt;District&gt; districts { get; set; } = new HashSet&lt;District&gt;();
@@ -196,7 +196,7 @@ namespace Test.Entities
         public int StateId { get; set; }
 
         //Navigation Property
-        public State State { get; set; } = new();
+        public State? State { get; set; }
     }
 }</code></pre>
 <hr>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 8</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                    <li>Edit & Delete using Repository and adding Views</li>
+                   <li>ViewBag</li>
+                   <li>ViewData</li>
+                   <li>TempData</li>
+                   <li>Difference between- ViewBag, ViewData, TempData</li>
+                   <li>Read & Create States using Repository and adding Views</li>
+                   <li>Eager Loading in EF Core</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Edit & Delete using Repository and adding Views</h2>
+                <h3>Steps:</h3>
+                <ol>
+                    <li>Create Action Methods</li>
+                    <li>Use methods in repository to Edit &amp; Delete records</li>
+                    <li>Add razor view with template</li>
+                    <li>Make required changes in view</li>
+                </ol>
+                
+                <h4>Example: Controller File</h3>
+                
+                <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Controllers
+{
+    public class CountryController : Controller
+    {
+        private readonly ICountryRepo _countryRepo;
+
+        public CountryController(ICountryRepo countryRepo)
+        {
+            _countryRepo = countryRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var countries = _countryRepo.GetAll();
+            return View(countries);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            Country country = new Country();
+            country.Name = "";
+            return View(country);
+        }
+
+        [HttpPost]
+        public IActionResult Create(Country country)
+        {
+            _countryRepo.Save(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var country = _countryRepo.GetById(id);
+            return View(country);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Country country)
+        {
+            _countryRepo.Edit(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var country = _countryRepo.GetById(id);
+            return View(country);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Country country)
+        {
+            _countryRepo.RemoveData(country);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>Example: View File - Edit</h4>
+
+                
+                <pre class="language-html"><code>@model Test.Entities.Country
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                
+                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}</code></pre>
+<h4>Example: View File - Delete</h4>
+<pre class="language-html"><code>@model Test.Entities.Country
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+&lt;h1&gt;Delete&lt;/h1&gt;
+
+&lt;h3&gt;Are you sure you want to delete this?&lt;/h3&gt;
+&lt;div&gt;
+    &lt;h4&gt;Country&lt;/h4&gt;
+    &lt;hr /&gt;
+    &lt;dl class="row"&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Id)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Id)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Name)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Name)
+        &lt;/dd&gt;
+    &lt;/dl&gt;
+    
+    &lt;form asp-action="Delete"&gt;
+        &lt;input type="submit" value="Delete" class="btn btn-danger" /&gt; |
+        &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+
+<hr>
+<h2>ViewBag</h2> 
+<ul>
+    <li>ViewBag is a dynamic property that allows you to pass data from a controller to a view. It's a dynamic object, meaning you can add properties to it on the fly without defining them beforehand. It's commonly used when you need to pass a small amount of data from a controller action to a corresponding view.</li>
+    <li>We can add any type of data to the ViewBag – strings, integers, objects, etc.</li>
+</ul> 
+<h3>Example : Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+
+namespace Test.UI.Controllers
+{
+    public class ConceptsController : Controller
+    {
+        public IActionResult Index()
+        {
+            ViewBag.Message = "Hello, ViewBag!";
+            
+            return View();
+        }
+    }
+}</code></pre>
+<h3>Example : View File</h3>
+<pre class="language-html"><code>@{
+    ViewData["Title"] = "Index";
+}
+
+&lt;h1&gt;@ViewBag.Message&lt;/h1&gt;</code></pre>
+<hr>
+<h2>ViewData</h2>
+<ul>
+    <li>ViewData is a dictionary-like container that allows you to pass data from a controller to a view. Unlike ViewBag, ViewData is a dictionary of key-value pairs, and you need to explicitly cast data types when retrieving them in the view. It provides a way to pass data from the controller to the view without using strongly-typed models.</li>
+</ul>
+<h3>Example:Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+
+namespace Test.UI.Controllers
+{
+    public class ConceptsController : Controller
+    {
+        public IActionResult Index()
+        {
+
+            ViewData["Message"] = "Hello, ViewData!";
+
+            return View();
+        }
+    }
+}</code></pre>
+<h3>Example:View File</h3>
+<pre class="language-html"><code>@{
+    ViewData["Title"] = "Index";
+}
+
+&lt;h1&gt;@ViewData["Message"]&lt;/h1&gt;</code></pre>
+<hr>
+<h2>TempData</h2>
+<ul>
+    <li>TempData is a dictionary-like object used to pass data from the current request to the next request. Unlike ViewData and ViewBag, which are used to pass data from a controller to a view during the same request, TempData persists data for the subsequent request only. After the next request, the data stored in TempData is automatically removed.</li>
+    <li>@Model is used to display the data retrieved from TempData</li>
+</ul>
+<h3>Example:Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+
+namespace Test.UI.Controllers
+{
+    public class ConceptsController : Controller
+    {
+        public IActionResult Index()
+        {
+            TempData["Message"] = "Hello, TempData!";
+            return View();
+        }
+
+        public IActionResult NextPage()
+        {
+            string message = TempData["Message"].ToString();
+            return View("NextPage", message);
+        }
+    }
+}</code></pre>
+<h3>Example:View File (Next Page/Method)</h3>
+<pre class="language-html"><code>@{
+    ViewData["Title"] = "NextPage";
+}
+
+&lt;h1&gt;@Model&lt;/h1&gt;</code></pre>
+<hr>
+<h2>Difference between- ViewBag, ViewData, TempData</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Feature</th>
+        <th>ViewBag</th>
+        <th>ViewData</th>
+        <th>TempData</th>
+    </tr>
+    <tr>
+        <td>Usage</td>
+        <td>Dynamic property</td>
+        <td>Dictionary</td>
+        <td>Dictionary</td>
+    </tr>
+    <tr>
+        <td>Scope</td>
+        <td>Current request</td>
+        <td>Current request</td>
+        <td>Next request</td>
+    </tr>
+    <tr>
+        <td>Data Removal</td>
+        <td>Not required, lasts for the current request</td>
+        <td>Not required, lasts for the current request</td>
+        <td>Automatically removed after the next request</td>
+    </tr>
+    <tr>
+        <td>Type Safety</td>
+        <td>No compile-time checking</td>
+        <td>No compile-time checking</td>
+        <td>No compile-time checking</td>
+    </tr>
+    <tr>
+        <td>Storage Mechanism</td>
+        <td>In memory</td>
+        <td>In memory</td>
+        <td>By default, in session (can be configured to use cookie-based temp data provider)</td>
+    </tr>
+    <tr>
+        <td>Example</td>
+        <td>ViewBag.Message = "Hello, ViewBag!";</td>
+        <td>ViewData["Message"] = "Hello, ViewData!";</td>
+        <td>TempData["Message"] = "Hello, TempData!";</td>
+    </tr>
+</table>
+<hr>
+<h2>Read & Create States using Repository and adding Views</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Create State Controller</li>
+    <li>Inject Repositories (Country,State) in Controller using constructor</li>
+    <li>Use method in repository to Read records</li>
+    <li>In create method - Get countrylist from repository and store it in ViewBag</li>
+    <li>Create razor views for Index & Create</li>
+    <li>Make required changes in Views</li>
+    <li>To show Country Name in state list, we have to update method in State repository</li>
+</ol>
+<h4>Example:Controller File</h4>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Controllers
+{
+    public class StateController : Controller
+    {
+        private readonly IStateRepo _stateRepo;
+        private readonly ICountryRepo _countryRepo;
+
+        public StateController(IStateRepo stateRepo, ICountryRepo countryRepo)
+        {
+            _stateRepo = stateRepo;
+            _countryRepo = countryRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var states = _stateRepo.GetAll();
+            return View(states);
+        }
+
+        
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var countries = _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(State state)
+        {
+            _stateRepo.Save(state);
+            return RedirectToAction("Index");
+        }
+
+        
+    }
+}</code></pre>
+<h4>Example:View File (Create)</h4>
+<pre class="language-html"><code>@model Test.Entities.State
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+&lt;h1&gt;Create&lt;/h1&gt;
+
+&lt;h4&gt;State&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+           
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="CountryId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="CountryId" asp-items="@ViewBag.CountryList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select Country&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="CountryId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<h4>Example:View File (Index)</h4>
+<pre class="language-html"><code>@model IEnumerable&lt;Test.Entities.State&gt;
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+    
+    &lt;h1&gt;Index&lt;/h1&gt;
+    
+    &lt;p&gt;
+        &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;table class="table"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Id)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Name)
+                &lt;/th&gt;
+                &lt;th&gt;
+                   Country
+                &lt;/th&gt;
+                &lt;th&gt;&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+    @foreach (var item in Model) {
+            &lt;tr&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Id)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Name)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Country.Name)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                &lt;/td&gt;
+            &lt;/tr&gt;
+    }
+        &lt;/tbody&gt;
+    &lt;/table&gt;</code></pre>
+    <h4>Required update in Repository file (State)</h4>
+    <pre class="language-csharp"><code>public IEnumerable&lt;State&gt; GetAll()
+{
+    //including country to show country in state list
+    var states= _context.States.Include(x=>x.Country).ToList();
+    return states;
+}</code></pre>
+<hr>
+<h2>Eager Loading in EF Core</h2>
+<ul>
+    <li>In Entity Framework (EF) Core, eager loading is a technique used to load related entities along with the main entity being queried in a single database round trip.</li>
+    <li>The Include method in EF Core is used to specify related entities that should be loaded along with the main entity. It allows you to specify navigation properties to be included in the query result.</li>
+</ul>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

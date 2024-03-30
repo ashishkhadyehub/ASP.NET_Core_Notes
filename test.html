@@ -1,34 +1,47 @@
-@model Test.Entities.Country
+@model IEnumerable&lt;Test.Entities.State&gt;
 
-@{
-    ViewData["Title"] = "Create";
-}
-
-&lt;h1&gt;Create&lt;/h1&gt;
-
-&lt;h4&gt;Country&lt;/h4&gt;
-&lt;hr /&gt;
-&lt;div class="row"&gt;
-    &lt;div class="col-md-4"&gt;
-        &lt;form asp-action="Create"&gt;
-            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
-          
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="Name" class="form-control" /&gt;
-                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
-            &lt;/div&gt;
-        &lt;/form&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div&gt;
-    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
-&lt;/div&gt;
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        ViewData["Title"] = "Index";
+    }
+    
+    &lt;h1&gt;Index&lt;/h1&gt;
+    
+    &lt;p&gt;
+        &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;table class="table"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Id)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Name)
+                &lt;/th&gt;
+                &lt;th&gt;
+                   Country
+                &lt;/th&gt;
+                &lt;th&gt;&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+    @foreach (var item in Model) {
+            &lt;tr&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Id)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Name)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Country.Name)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                &lt;/td&gt;
+            &lt;/tr&gt;
+    }
+        &lt;/tbody&gt;
+    &lt;/table&gt;
