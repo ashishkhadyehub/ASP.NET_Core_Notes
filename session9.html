@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 9</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   <li>Edit & Delete States using Repository and adding Views</li>
+                   <li>District CRUD operations using Repository and adding Views</li>
+                   <li>ViewModels</li>
+                   <li>Updating Country CRUD operations using ViewModels</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Edit & Delete States using Repository and adding Views</h2>
+                <h3>Steps:</h3>
+                <ol>
+                    <li>Create Action Methods</li>
+                    <li>Use methods in repository to Edit &amp; Delete records</li>
+                    <li>Add razor view with template</li>
+                    <li>Make required changes in view</li>
+                </ol>
+                
+                <h4>Example: Controller File</h3>
+                
+                <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Controllers
+{
+    public class StateController : Controller
+    {
+        private readonly IStateRepo _stateRepo;
+        private readonly ICountryRepo _countryRepo;
+
+        public StateController(IStateRepo stateRepo, ICountryRepo countryRepo)
+        {
+            _stateRepo = stateRepo;
+            _countryRepo = countryRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var states = _stateRepo.GetAll();
+            return View(states);
+        }
+
+        
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var countries = _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(State state)
+        {
+            _stateRepo.Save(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var countries = _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            var state = _stateRepo.GetById(id);
+            return View(state);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(State state)
+        {
+            _stateRepo.Edit(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var state = _stateRepo.GetById(id);
+            return View(state);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Delete(State state)
+        {
+            _stateRepo.RemoveData(state);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>Example: View File - Edit</h4>
+
+                
+                <pre class="language-html"><code>@model Test.Entities.State
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+&lt;h4&gt;State&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+               
+                &lt;input type="hidden" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="CountryId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="CountryId" asp-items="@ViewBag.CountryList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select Country&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="CountryId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<h4>Example: View File - Delete</h4>
+<pre class="language-html"><code>@model Test.Entities.State
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+&lt;h1&gt;Delete&lt;/h1&gt;
+
+&lt;h3&gt;Are you sure you want to delete this?&lt;/h3&gt;
+&lt;div&gt;
+    &lt;h4&gt;State&lt;/h4&gt;
+    &lt;hr /&gt;
+    &lt;dl class="row"&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Id)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Id)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Name)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Name)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.CountryId)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.CountryId)
+        &lt;/dd&gt;
+    &lt;/dl&gt;
+    
+    &lt;form asp-action="Delete"&gt;
+        &lt;input type="submit" value="Delete" class="btn btn-danger" /&gt; |
+        &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+
+<hr>
+<h2>District CRUD operations using Repository and adding Views</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Create Action Methods</li>
+    <li>Use methods in repository for CRUD operations</li>
+    <li>Add razor view with template</li>
+    <li>Make required changes in view</li>
+</ol>
+
+<h4>Example: Controller File</h3>
+    <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Controllers
+{
+    public class DistrictController : Controller
+    {
+        private readonly IDistrictRepo _districtRepo;
+        private readonly IStateRepo _stateRepo;
+
+        public DistrictController(IDistrictRepo districtRepo, IStateRepo stateRepo)
+        {
+            _districtRepo = districtRepo;
+            _stateRepo = stateRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var districts = _districtRepo.GetAll();
+            return View(districts);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var states = _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(District district)
+        {
+            _districtRepo.Save(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var states = _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            var district = _districtRepo.GetById(id);
+            return View(district);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(District district)
+        {
+            _districtRepo.Edit(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var district = _districtRepo.GetById(id);
+            return View(district);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Delete(District district)
+        {
+            _districtRepo.RemoveData(district);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+    <h4>Example: View File - Index</h3>
+<pre class="language-html"><code>@model IEnumerable&lt;Test.Entities.District&gt;
+
+@{
+    ViewData["Title"] = "Index";
+}
+    
+&lt;h1&gt;Index&lt;/h1&gt;
+    
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Id)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Name)
+            &lt;/th&gt;
+            &lt;th&gt;
+                State
+            &lt;/th&gt;
+            &lt;th&gt;
+                Country
+            &lt;/th&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Name)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.State.Name)
+            &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.State.Country.Name)
+                &lt;/td&gt;
+            &lt;td&gt;
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                    
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;
+        
+</code></pre>
+    <h4>Example: View File - Create</h4>
+    <pre class="language-html"><code>@model Test.Entities.District
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+&lt;h1&gt;Create&lt;/h1&gt;
+
+&lt;h4&gt;District&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+          
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="StateId" asp-items="@ViewBag.StateList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select State&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="StateId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+    <h4>Example: View File - Edit</h4>
+    <pre class="language-html"><code>@model Test.Entities.District
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+&lt;h4&gt;District&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                
+                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="StateId" asp-items="@ViewBag.StateList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;State&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="StateId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+    <h4>Example: View File - Delete</h4>
+    <pre class="language-html"><code>@model Test.Entities.District
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+&lt;h1&gt;Delete&lt;/h1&gt;
+
+&lt;h3&gt;Are you sure you want to delete this?&lt;/h3&gt;
+&lt;div&gt;
+    &lt;h4&gt;District&lt;/h4&gt;
+    &lt;hr /&gt;
+    &lt;dl class="row"&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Id)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Id)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.Name)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.Name)
+        &lt;/dd&gt;
+        &lt;dt class = "col-sm-2"&gt;
+            @Html.DisplayNameFor(model =&gt; model.StateId)
+        &lt;/dt&gt;
+        &lt;dd class = "col-sm-10"&gt;
+            @Html.DisplayFor(model =&gt; model.StateId)
+        &lt;/dd&gt;
+    &lt;/dl&gt;
+    
+    &lt;form asp-action="Delete"&gt;
+        &lt;input type="submit" value="Delete" class="btn btn-danger" /&gt; |
+        &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+    <h4>Required update in Repository file (District)</h4>
+    <pre class="language-csharp"><code> public IEnumerable<District> GetAll()
+ {
+     var cities = _context.Districts.Include(x=>x.State).ThenInclude(y=>y.Country).ToList();
+     return cities;
+ }</code></pre>
+ <hr>
+ <h2>ViewModels</h2>
+ <ul>
+    <li>In ASP.NET Core MVC, a ViewModel is a design pattern used to represent the data that a view will display, typically tailored to the specific needs of the view. It acts as a medium between the controller and the view, providing a structured way to pass data from the controller to the view.</li>
+    <li>The ViewModel sits between the controller and the view. It's a plain C# class that contains properties representing the data that needs to be displayed on the view. Unlike the model, which might contain additional business logic or database annotations, the ViewModel is specifically tailored to the needs of the view.</li>
+ </ul>
+ <hr>
+ <h2>Updating Country CRUD operations using ViewModels</h2>
+ <h3>Steps:</h3>
+ <ol>
+    <li>Create New Folder as "ViewModels"</li>
+    <li>Create Subfolders for each Entity/Model</li>
+    <li>Create ViewModel class files</li>
+    <li>Update Controller methods -> Use ViewModel instead of Model class</li>
+    <li>Update respective view -> Use ViewModel instead of Model class</li>
+ </ol>
+ <h4>Example: ViewModel File - CountryViewModel</h4>
+ <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.CountryViewModels
+{
+    public class CountryViewModel
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+}</code></pre>
+ <h4>Example: ViewModel File - CreateCountryViewModel</h4>
+ <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.CountryViewModels
+{
+    public class CreateCountryViewModel
+    {
+        public string Name { get; set; }
+    }
+}</code></pre>
+ <h4>Example: Controller File</h4>
+ <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.CountryViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class CountryController : Controller
+    {
+        private readonly ICountryRepo _countryRepo;
+
+        public CountryController(ICountryRepo countryRepo)
+        {
+            _countryRepo = countryRepo;
+        }
+
+        public IActionResult Index()
+        {
+            List&lt;CountryViewModel&gt; vm = new List&lt;CountryViewModel&gt;();
+            var countries = _countryRepo.GetAll();
+            foreach (var country in countries)
+            {
+                vm.Add(new CountryViewModel { Id = country.Id, Name = country.Name });
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            CreateCountryViewModel country = new CreateCountryViewModel();
+           
+            return View(country);
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreateCountryViewModel vm)
+        {
+            var country = new Country
+            {
+                Name = vm.Name,
+            };
+            
+            _countryRepo.Save(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var country = _countryRepo.GetById(id);
+            CountryViewModel vm = new CountryViewModel { Id = country.Id, Name=country.Name };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CountryViewModel vm)
+        {
+            var country = new Country
+            {
+                Id = vm.Id,
+                Name = vm.Name
+            };
+            _countryRepo.Edit(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var country = _countryRepo.GetById(id);
+            return View(country);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Country country)
+        {
+            _countryRepo.RemoveData(country);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h4>Example: View File - Index</h4>
+<pre class="language-html"><code>@model IEnumerable&lt;CountryViewModel&gt;
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+    
+    &lt;h1&gt;Index&lt;/h1&gt;
+    
+    &lt;p&gt;
+        &lt;a asp-action="Create"&gt;Add New Country&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;table class="table"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Id)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Name)
+                &lt;/th&gt;
+                &lt;th&gt;&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+    @foreach (var item in Model) {
+            &lt;tr&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Id)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Name)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                   
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                &lt;/td&gt;
+            &lt;/tr&gt;
+    }
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+    
+</code></pre>
+<h4>Example: View File - Create</h4>
+<pre class="language-html"><code>@model CreateCountryViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+&lt;h1&gt;Create&lt;/h1&gt;
+
+&lt;h4&gt;Country&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+          
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}</code></pre>
+<h4>Example: View File - Edit</h4>
+<pre class="language-html"><code>@model CountryViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                
+                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}</code></pre>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

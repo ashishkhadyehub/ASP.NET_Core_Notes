@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 10</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   <li>Updating State CRUD operations using ViewModels</li>
+                   <li>Updating District CRUD operations using ViewModels</li>
+                   <li>Async Programming</li>
+                   <li>Async/Await</li>
+                   <li>Updating Country Interface, Repository & Controller with Async programming</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Updating State CRUD operations using ViewModels</h2>
+                <h3>Steps:</h3>
+                <ol>
+                   
+                    <li>Create ViewModel class files</li>
+                    <li>Update Controller methods -&gt; Use ViewModel instead of Model class</li>
+                    <li>Update respective view -&gt; Use ViewModel instead of Model class</li>
+                 </ol>
+                <h4>Example : ViewModel File - StateViewModel</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.StateViewModels
+{
+    public class StateViewModel
+    {
+        public int Id { get; set; }
+
+        public string StateName { get; set; }
+
+        public string CountryName { get; set; }
+    }
+}</code></pre>
+                <h4>Example : ViewModel File - CreateStateViewModel</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.StateViewModels
+{
+    public class CreateStateViewModel
+    {
+        public string StateName { get; set; }
+        public int CountryId { get; set; }
+    }
+}</code></pre>
+                <h4>Example : ViewModel File - EditStateViewModel</h4>
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.StateViewModels
+{
+    public class EditStateViewModel
+    {
+        public int Id { get; set; }
+
+        public string StateName { get; set; }
+        
+        public int CountryId { get; set; }
+    }
+}</code></pre>
+                <hr>
+                <h4>Example: Controller File</h3>
+                
+                <pre class="language-csharp"><code>using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.StateViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class StateController : Controller
+    {
+        private readonly IStateRepo _stateRepo;
+        private readonly ICountryRepo _countryRepo;
+
+        public StateController(IStateRepo stateRepo, ICountryRepo countryRepo)
+        {
+            _stateRepo = stateRepo;
+            _countryRepo = countryRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var states = _stateRepo.GetAll();
+            var vm = new List&lt;StateViewModel&gt;();
+            foreach (var state in states)
+            {
+                vm.Add(new StateViewModel { Id=state.Id, StateName=state.Name, CountryName=state.Country.Name});
+            }
+            
+            return View(vm);
+        }
+
+        
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var countries = _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreateStateViewModel vm)
+        {
+            var state = new State
+            {
+                Name=vm.StateName,
+                CountryId=vm.CountryId
+            };
+            _stateRepo.Save(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var countries = _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            var state = _stateRepo.GetById(id);
+            var vm = new EditStateViewModel
+            {
+                Id=state.Id,
+                StateName=state.Name,
+                CountryId=state.CountryId
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EditStateViewModel vm)
+        {
+            var state = new State
+            {
+                Id = vm.Id,
+                Name=vm.StateName,
+                CountryId=vm.CountryId
+            };
+            _stateRepo.Edit(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var state = _stateRepo.GetById(id);
+            return View(state);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Delete(State state)
+        {
+            _stateRepo.RemoveData(state);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+    <h4>Example: View File - Index</h4>
+        <pre class="language-html"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+@using Test.UI.ViewModels.StateViewModels
+@model IEnumerable&lt;StateViewModel&gt;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+&lt;h1&gt;Index&lt;/h1&gt;
+
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Id)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.StateName)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.CountryName)
+            &lt;/th&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.StateName)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.CountryName)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <h4>Example: View File - Create</h4>
+        <pre class="language-html"><code>@using Test.UI.ViewModels.StateViewModels
+@model CreateStateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+&lt;h1&gt;Create&lt;/h1&gt;
+
+&lt;h4&gt;State&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+           
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="StateName" class="form-control" /&gt;
+                &lt;span asp-validation-for="StateName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="CountryId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="CountryId" asp-items="@ViewBag.CountryList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select Country&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="CountryId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+        <h4>Example: View File - Edit</h4>
+        <pre class="language-html"><code>@using Test.UI.ViewModels.StateViewModels
+@model EditStateViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+&lt;h4&gt;State&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+               
+                &lt;input type="hidden" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="StateName" class="form-control" /&gt;
+                &lt;span asp-validation-for="StateName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="CountryId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="CountryId" asp-items="@ViewBag.CountryList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select Country&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="CountryId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+        
+<hr>
+<h2>Updating State CRUD operations using ViewModels</h2>
+<h3>Steps:</h3>
+<ol>
+   
+    <li>Create ViewModel class files</li>
+    <li>Update Controller methods -&gt; Use ViewModel instead of Model class</li>
+    <li>Update respective view -&gt; Use ViewModel instead of Model class</li>
+ </ol>
+ <h4>Example : ViewModel File - DistrictViewModel</h4>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.DistrictViewModels
+{
+    public class DistrictViewModel
+    {
+        public int Id { get; set; }
+        public string DistrictName { get; set; }
+
+        public string StateName { get; set; }
+
+        public string CountryName { get; set; }
+    }
+}</code></pre>
+<h4>Example : ViewModel File - CreateDistrictViewModel</h4>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.DistrictViewModels
+{
+    public class CreateDistrictViewModel
+    {
+        public string DistrictName { get; set; }
+        
+        public int StateId { get; set; }
+    }
+}</code></pre>
+<h4>Example : ViewModel File - EditDistrictViewModel</h4>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.DistrictViewModels
+{
+    public class EditDistrictViewModel
+    {
+        public int Id { get; set; }
+        public string DistrictName { get; set; }
+        
+        public int StateId { get; set; }
+    }
+}</code></pre>
+<h4>Example: Controller File</h3>
+    <pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.DistrictViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class DistrictController : Controller
+    {
+        private readonly IDistrictRepo _districtRepo;
+        private readonly IStateRepo _stateRepo;
+
+        public DistrictController(IDistrictRepo districtRepo, IStateRepo stateRepo)
+        {
+            _districtRepo = districtRepo;
+            _stateRepo = stateRepo;
+        }
+
+        public IActionResult Index()
+        {
+            var districts = _districtRepo.GetAll();
+            List&lt;DistrictViewModel&gt; vm = new List&lt;DistrictViewModel&gt;();
+            foreach (var district in districts)
+            {
+                vm.Add(new DistrictViewModel { Id = district.Id, DistrictName = district.Name, StateName = district.State.Name, CountryName = district.State.Country.Name });
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var states = _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreateDistrictViewModel vm)
+        {
+            var district = new District
+            {
+                Name=vm.DistrictName,
+                StateId=vm.StateId
+            };
+            _districtRepo.Save(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var states = _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            var district = _districtRepo.GetById(id);
+            var vm = new EditDistrictViewModel
+            {
+                Id = district.Id,
+                DistrictName = district.Name,
+                StateId=district.StateId
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EditDistrictViewModel vm)
+        {
+            var district = new District
+            {
+                Id=vm.Id,
+                Name=vm.DistrictName,
+                StateId=vm.StateId
+            };
+            _districtRepo.Edit(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var district = _districtRepo.GetById(id);
+            return View(district);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Delete(District district)
+        {
+            _districtRepo.RemoveData(district);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+    <h4>Example: View File - Index</h4>
+    <pre class="language-html"><code>@using Test.UI.ViewModels.DistrictViewModels
+@model IEnumerable&lt;DistrictViewModel&gt;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+&lt;h1&gt;Index&lt;/h1&gt;
+
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Create New&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.Id)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.DistrictName)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.StateName)
+            &lt;/th&gt;
+            &lt;th&gt;
+                @Html.DisplayNameFor(model =&gt; model.CountryName)
+            &lt;/th&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.DistrictName)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.StateName)
+            &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.CountryName)
+                &lt;/td&gt;
+            &lt;td&gt;
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+    <h4>Example: View File - Create</h4>
+    <pre class="language-html"><code>@using Test.UI.ViewModels.DistrictViewModels
+@model CreateDistrictViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+&lt;h1&gt;Create&lt;/h1&gt;
+
+&lt;h4&gt;District&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+          
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="DistrictName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="DistrictName" class="form-control" /&gt;
+                &lt;span asp-validation-for="DistrictName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="StateId" asp-items="@ViewBag.StateList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;Select State&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="StateId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+    <h4>Example: View File - Edit</h4>
+    <pre class="language-html"><code>@using Test.UI.ViewModels.DistrictViewModels
+@model EditDistrictViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+&lt;h1&gt;Edit&lt;/h1&gt;
+
+&lt;h4&gt;District&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Edit"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                
+                &lt;input type="hidden" asp-for="Id" class="form-control" /&gt;
+                &lt;span asp-validation-for="Id" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="DistrictName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="DistrictName" class="form-control" /&gt;
+                &lt;span asp-validation-for="DistrictName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="StateId" class="control-label"&gt;&lt;/label&gt;
+                &lt;select asp-for="StateId" asp-items="@ViewBag.StateList" class="form-control"&gt;
+                    &lt;option selected disabled&gt;State&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;span asp-validation-for="StateId" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Save" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<hr>
+<h2>Async Programming</h2>
+<ul>
+    <li>Asynchronous programming allows your application to handle more requests without blocking threads. This is crucial for high-performance web applications where scalability and responsiveness are key requirements.</li>
+    <li>In synchronous programming, each operation blocks the execution until it completes. This means if there's a long-running operation, it'll hold up the entire thread, making the application less responsive.</li>
+    <li>Asynchronous programming, on the other hand, allows the thread to be released while waiting for an operation to complete. This enables the thread to perform other tasks instead of waiting idly, improving the overall responsiveness of the application.</li>
+    <li>We can define asynchronous controller actions by returning Task&lt;IActionResult&gt; instead of IActionResult. This allows the action method to be asynchronous, meaning it can perform operations such as I/O-bound tasks without blocking the thread.</li>
+</ul>
+<h3>Example-Controller File</h3>
+<pre class="language-csharp"><code>public async Task&lt;IActionResult&gt; Index()
+{
+    // Perform asynchronous operations here
+    return View();
+}</code></pre>
+<hr>
+<h2>Async/Await</h2>
+<ul>
+    <li>async and await keywords are fundamental to asynchronous programming in C#.</li>
+    <li>"async" marks a method as asynchronous</li>
+    <li>"await" is used to asynchronously wait for the completion of an asynchronous operation.</li>
+    <li>When you await an asynchronous operation, the calling thread is released to perform other work until the awaited operation completes.</li>
+</ul>
+<hr>
+<h2>Updating Country Interface, Repository & Controller with Async programming</h2>
+<h3>Example : Interface File - Country</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface ICountryRepo
+    {
+        Task&lt;IEnumerable&lt;Country&gt;&gt; GetAll();
+
+        Task&lt;Country&gt; GetById(int id);
+
+        Task Save(Country country);
+
+        Task Edit(Country country);
+
+        Task RemoveData(Country country);
+
+
+    }
+}</code></pre>
+<h3>Example : Class File (Implementation) - Country</h3>
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class CountryRepo : ICountryRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public CountryRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task Edit(Country country)
+        {
+            _context.Countries.Update(country);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task&lt;IEnumerable&lt;Country&gt;&gt; GetAll()
+        {
+            var countries = await _context.Countries.ToListAsync();
+            return countries;
+        }
+
+        public async Task&lt;Country&gt; GetById(int id)
+        {
+            var country = await _context.Countries.FindAsync(id);
+            return country;
+        }
+
+        public async Task RemoveData(Country country)
+        {
+            _context.Remove(country);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Save(Country country)
+        {
+           await _context.AddAsync(country);
+           await _context.SaveChangesAsync();
+        }
+    }
+}</code></pre>
+<h3>Example : Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.CountryViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class CountryController : Controller
+    {
+        private readonly ICountryRepo _countryRepo;
+
+        public CountryController(ICountryRepo countryRepo)
+        {
+            _countryRepo = countryRepo;
+        }
+
+        public async Task&lt;IActionResult&gt; Index()
+        {
+            List&lt;CountryViewModel&gt; vm = new List&lt;CountryViewModel&gt;();
+            var countries = await _countryRepo.GetAll();
+            foreach (var country in countries)
+            {
+                vm.Add(new CountryViewModel { Id = country.Id, Name = country.Name });
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            CreateCountryViewModel country = new CreateCountryViewModel();
+           
+            return View(country);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Create(CreateCountryViewModel vm)
+        {
+            var country = new Country
+            {
+                Name = vm.Name,
+            };
+            
+            await _countryRepo.Save(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Edit(int id)
+        {
+            var country = await _countryRepo.GetById(id);
+            CountryViewModel vm = new CountryViewModel { Id = country.Id, Name=country.Name };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Edit(CountryViewModel vm)
+        {
+            var country = new Country
+            {
+                Id = vm.Id,
+                Name = vm.Name
+            };
+            await _countryRepo.Edit(country);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Delete(int id)
+        {
+            var country = await _countryRepo.GetById(id);
+            return View(country);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Delete(Country country)
+        {
+            await _countryRepo.RemoveData(country);
+            return RedirectToAction("Index");
+        }
+    }
+}
+
+</code></pre>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
