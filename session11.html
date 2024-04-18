@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 11</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                   <li>Updating State Interface, Repository & Controller with Async programming</li>
+                   <li>Updating District Interface, Repository & Controller with Async programming</li>
+                   <li>Partial Views</li>
+                   <li>Partial Views with Model Data</li>
+                   <li>View Components</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                
+<h2>Updating State Interface, Repository & Controller with Async programming</h2>
+<h3>Example : Interface File - State</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface IStateRepo
+    {
+        Task&lt;IEnumerable&lt;State&gt;&gt; GetAll();
+
+        Task&lt;State&gt; GetById(int id);
+
+         Task Save(State state);
+        
+         Task Edit(State state);
+        
+         Task RemoveData(State state);
+    }
+}</code></pre>
+<h3>Example : Class File (Implementation) - State</h3>
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class StateRepo : IStateRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public StateRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task Edit(State state)
+        {
+            _context.States.Update(state);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task&lt;IEnumerable&lt;State&gt;&gt; GetAll()
+        {
+            //including country to show country in state list
+            var states= await _context.States.Include(x=&gt;x.Country).ToListAsync();
+            return states;
+        }
+
+        public async Task &lt;State&gt; GetById(int id)
+        {
+            var state = await _context.States.FindAsync(id);
+            return state;
+        }
+
+        public async Task RemoveData(State state)
+        {
+            _context.States.Remove(state);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Save(State state)
+        {
+            await _context.States.AddAsync(state);
+            await _context.SaveChangesAsync();
+        }
+    }
+}</code></pre>
+<h3>Example : Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.StateViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class StateController : Controller
+    {
+        private readonly IStateRepo _stateRepo;
+        private readonly ICountryRepo _countryRepo;
+
+        public StateController(IStateRepo stateRepo, ICountryRepo countryRepo)
+        {
+            _stateRepo = stateRepo;
+            _countryRepo = countryRepo;
+        }
+
+        public async Task&lt;IActionResult&gt; Index()
+        {
+            var states = await _stateRepo.GetAll();
+            var vm = new List&lt;StateViewModel&gt;();
+            foreach (var state in states)
+            {
+                vm.Add(new StateViewModel { Id=state.Id, StateName=state.Name, CountryName=state.Country.Name});
+            }
+            
+            return View(vm);
+        }
+
+        
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt;  Create()
+        {
+            var countries = await _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Create(CreateStateViewModel vm)
+        {
+            var state = new State
+            {
+                Name=vm.StateName,
+                CountryId=vm.CountryId
+            };
+            await _stateRepo.Save(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Edit(int id)
+        {
+            var countries = await _countryRepo.GetAll();
+            ViewBag.CountryList = new SelectList(countries, "Id", "Name");
+            var state = await _stateRepo.GetById(id);
+            var vm = new EditStateViewModel
+            {
+                Id=state.Id,
+                StateName=state.Name,
+                CountryId=state.CountryId
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Edit(EditStateViewModel vm)
+        {
+            var state = new State
+            {
+                Id = vm.Id,
+                Name=vm.StateName,
+                CountryId=vm.CountryId
+            };
+            await _stateRepo.Edit(state);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Delete(int id)
+        {
+            var state = await _stateRepo.GetById(id);
+            return View(state);
+        }
+
+
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Delete(State state)
+        {
+            await _stateRepo.RemoveData(state);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<hr>
+<h2>Updating District Interface, Repository & Controller with Async programming</h2>
+<h3>Example : Interface File - District</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface IDistrictRepo
+    {
+        Task&lt;IEnumerable&lt;District&gt;&gt; GetAll();
+
+        Task&lt;District&gt; GetById(int id);
+
+        Task Save(District district);
+
+        Task Edit(District district);
+
+        Task RemoveData(District district);
+    }
+}</code></pre>
+<h3>Example : Class File (Implementation) - District</h3>
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class DistrictRepo : IDistrictRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public DistrictRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task Edit(District district)
+        {
+            _context.Districts.Update(district);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task&lt;IEnumerable&lt;District&gt;&gt; GetAll()
+        {
+            var cities = await _context.Districts.Include(x=&gt;x.State).ThenInclude(y=&gt;y.Country).ToListAsync();
+            return cities;
+        }
+
+        public async Task&lt;District&gt; GetById(int id)
+        {
+            var city = await _context.Districts.FindAsync(id);
+            return city;
+        }
+
+        public async Task RemoveData(District district)
+        {
+            _context.Districts.Remove(district);    
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Save(District district)
+        {
+            await _context.Districts.AddAsync(district);
+            await _context.SaveChangesAsync();
+        }
+    }
+}</code></pre>
+<h3>Example : Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Test.Entities;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.DistrictViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class DistrictController : Controller
+    {
+        private readonly IDistrictRepo _districtRepo;
+        private readonly IStateRepo _stateRepo;
+
+        public DistrictController(IDistrictRepo districtRepo, IStateRepo stateRepo)
+        {
+            _districtRepo = districtRepo;
+            _stateRepo = stateRepo;
+        }
+
+        public async Task&lt;IActionResult&gt; Index()
+        {
+            var districts = await _districtRepo.GetAll();
+            List&lt;DistrictViewModel&gt; vm = new List&lt;DistrictViewModel&gt;();
+            foreach (var district in districts)
+            {
+                vm.Add(new DistrictViewModel { Id = district.Id, DistrictName = district.Name, StateName = district.State.Name, CountryName = district.State.Country.Name });
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Create()
+        {
+            var states = await _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Create(CreateDistrictViewModel vm)
+        {
+            var district = new District
+            {
+                Name=vm.DistrictName,
+                StateId=vm.StateId
+            };
+            await _districtRepo.Save(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Edit(int id)
+        {
+            var states = await _stateRepo.GetAll();
+            ViewBag.StateList = new SelectList(states, "Id", "Name");
+            var district = await _districtRepo.GetById(id);
+            var vm = new EditDistrictViewModel
+            {
+                Id = district.Id,
+                DistrictName = district.Name,
+                StateId=district.StateId
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Edit(EditDistrictViewModel vm)
+        {
+            var district = new District
+            {
+                Id=vm.Id,
+                Name=vm.DistrictName,
+                StateId=vm.StateId
+            };
+            await _districtRepo.Edit(district);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Delete(int id)
+        {
+            var district = await _districtRepo.GetById(id);
+            return View(district);
+        }
+
+
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Delete(District district)
+        {
+            await _districtRepo.RemoveData(district);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<hr>
+<h2>Partial Views</h2>
+<ul>
+    <li>Partial views are a way to break up your views into smaller, reusable components.</li>
+    <li>Partial views allow you to render a portion of a view separately from the main view</li>
+    <li>To add Partial View goto Add-View-Razor View-Select Empty(without model)-mark "Create a Partial View" checkbox-Add</li>
+</ul>
+<h3>Example : Partial View File</h3>
+<pre class="language-html"><code>&lt;nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"&gt;
+    &lt;div class="container-fluid"&gt;
+        &lt;a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"&gt;Test.UI&lt;/a&gt;
+        &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation"&gt;
+            &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"&gt;
+            &lt;ul class="navbar-nav flex-grow-1"&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"&gt;Home&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy"&gt;Privacy&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Country" asp-action="Index"&gt;Countries&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="State" asp-action="Index"&gt;States&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="District" asp-action="Index"&gt;Districts&lt;/a&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+<h3>Example : Using partial view in Main View</h3>
+<pre class="language-html"><code>&lt;!DOCTYPE html&gt;
+    &lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;title&gt;@ViewData["Title"] - Test.UI&lt;/title&gt;
+        &lt;link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /&gt;
+        &lt;link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /&gt;
+        &lt;link rel="stylesheet" href="~/Test.UI.styles.css" asp-append-version="true" /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;header&gt;
+            @* using partial view *@
+            &lt;partial name="_Navbar"&gt;&lt;/partial&gt;
+        &lt;/header&gt;
+        &lt;div class="container"&gt;
+            &lt;main role="main" class="pb-3"&gt;
+                @RenderBody()
+            &lt;/main&gt;
+        &lt;/div&gt;
+    
+        &lt;footer class="border-top footer text-muted"&gt;
+            &lt;div class="container"&gt;
+                &copy; 2024 - Test.UI - &lt;a asp-area="" asp-controller="Home" asp-action="Privacy"&gt;Privacy&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/footer&gt;
+        &lt;script src="~/lib/jquery/dist/jquery.min.js"&gt;&lt;/script&gt;
+        &lt;script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+        &lt;script src="~/js/site.js" asp-append-version="true"&gt;&lt;/script&gt;
+        @await RenderSectionAsync("Scripts", required: false)
+    &lt;/body&gt;
+    &lt;/html&gt;</code></pre>
+    <hr>
+    <h2>Partial Views with Model Data</h2>
+    <h3>Example : Partial View with Model Data</h3>
+    <pre class="language-html"><code>@model int
+@Html.ActionLink("Edit", "Edit", new { id = Model }) |
+
+@Html.ActionLink("Delete", "Delete", new { id = Model })</code></pre>
+<h3>Example : Passing data from Main View to Partial View</h3>
+<pre class="language-html"><code>@model IEnumerable&lt;CountryViewModel&gt;
+
+@{
+    ViewData["Title"] = "Index";
+}
+    
+&lt;h1&gt;Index&lt;/h1&gt;
+    
+&lt;p&gt;
+    &lt;a asp-action="Create"&gt;Add New Country&lt;/a&gt;
+&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+    &lt;tr&gt;
+        &lt;th&gt;
+            @Html.DisplayNameFor(model =&gt; model.Id)
+        &lt;/th&gt;
+        &lt;th&gt;
+            @Html.DisplayNameFor(model =&gt; model.Name)
+        &lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+@foreach (var item in Model) {
+        &lt;tr&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Id)
+            &lt;/td&gt;
+            &lt;td&gt;
+                @Html.DisplayFor(modelItem =&gt; item.Name)
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;partial name="_ActionLinks" model="@item.Id"&gt;&lt;/partial&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+}
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h2>View Components</h2>
+<ul>
+    <li>View Components in ASP.NET Core MVC are similar to partial views but offer more functionality and flexibility</li>
+    <li>They are essentially mini-controllers with associated views that can be invoked from within your main views.</li>
+    <li>View Components are useful for rendering complex UI elements or widgets that need their own logic.</li>
+</ul>
+<h3>Steps:</h3>
+<ol>
+    <li>Create New Folder in Model directory - "ViewComponent"</li>
+    <li>Add ViewComponent classes </li>
+    <li>ViewComponent class must be inherit from "ViewComponent"</li>
+    <li>Create required methods/tasks in ViewComponent class </li>
+    <li>To create Views - goto - Views - Shared - Add New Folder as "Components"</li>
+    <li>Create Sub folder for ViewComponent - Folder name must be same as ViewComponent class name </li>
+    <li>Use ViewComponent in Main View</li>
+</ol>
+<h3>Example- ViewComponent class - CountryCount</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Models.ViewComponents
+{
+    public class CountryCountViewComponent : ViewComponent
+    {
+        private readonly ICountryRepo _countryRepo;
+
+        public CountryCountViewComponent(ICountryRepo countryRepo)
+        {
+            _countryRepo = countryRepo;
+        }
+
+        public async Task&lt;IViewComponentResult&gt; InvokeAsync()
+        {
+            var countries = await _countryRepo.GetAll();
+            int totalCountries = countries.Count();
+            return View(totalCountries);
+        }
+    }
+}</code></pre>
+<h3>Example- ViewComponent class - StateCount</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Models.ViewComponents
+{
+    public class StateCountViewComponent : ViewComponent
+    {
+        private readonly IStateRepo _stateRepo;
+
+        public StateCountViewComponent(IStateRepo stateRepo)
+        {
+            _stateRepo = stateRepo;
+        }
+
+        public async Task&lt;IViewComponentResult&gt; InvokeAsync()
+        {
+            var states = await _stateRepo.GetAll();
+            int totalStates = states.Count();
+            return View(totalStates);
+        }
+    }
+}</code></pre>
+<h3>Example- ViewComponent class - DistrictCount</h3>
+<pre class="language-csharp"><code>
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Models.ViewComponents
+{
+    public class DistrictCountViewComponent : ViewComponent
+    {
+        private readonly IDistrictRepo _districtRepo;
+
+        public DistrictCountViewComponent(IDistrictRepo districtRepo)
+        {
+            _districtRepo = districtRepo;
+        }
+
+        public async Task&lt;IViewComponentResult&gt; InvokeAsync()
+        {
+            var districts = await _districtRepo.GetAll();
+            int totalDistricts = districts.Count();
+            return View(totalDistricts);
+        }
+    }
+}</code></pre>
+<h3>Example - View File for all ViewComponents</h3>
+<pre class="language-html"><code>@model int
+&lt;h2&gt;@Model&lt;/h2&gt;</code></pre>
+<h3>Example - Using View Components in Main View</h3>
+<pre class="language-html"><code>@{
+ViewData["Title"] = "Home Page";
+}
+
+&lt;div class="text-center"&gt;
+    &lt;h1 class="display-4"&gt;Welcome Admin&lt;/h1&gt;
+    
+&lt;/div&gt;
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;div class="card"&gt;
+                &lt;div class="card-header"&gt;Total Countries&lt;/div&gt;
+                &lt;div class="card-body"&gt;@await Component.InvokeAsync("CountryCount")&lt;/div&gt;
+
+            &lt;/div&gt;
+        &lt;/div&gt; 
+        &lt;div class="col-md-4"&gt;
+            &lt;div class="card"&gt;
+                &lt;div class="card-header"&gt;Total States&lt;/div&gt;
+                &lt;div class="card-body"&gt;@await Component.InvokeAsync("StateCount")&lt;/div&gt;
+
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;div class="card"&gt;
+                &lt;div class="card-header"&gt;Total Districts&lt;/div&gt;
+                &lt;div class="card-body"&gt;@await Component.InvokeAsync("DistrictCount")&lt;/div&gt;
+
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

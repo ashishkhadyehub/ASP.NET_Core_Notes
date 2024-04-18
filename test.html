@@ -1,82 +1,39 @@
-using Microsoft.AspNetCore.Mvc;
-using Test.Entities;
-using Test.Repositories.Interfaces;
-using Test.UI.ViewModels.CountryViewModels;
+@inject IHttpContextAccessor ContextAccessor
+&lt;nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"&gt;
+    &lt;div class="container-fluid"&gt;
+        &lt;a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"&gt;Test.UI&lt;/a&gt;
+        &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation"&gt;
+            &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"&gt;
+            &lt;ul class="navbar-nav flex-grow-1"&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"&gt;Home&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy"&gt;Privacy&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Country" asp-action="Index"&gt;Countries&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="State" asp-action="Index"&gt;States&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="District" asp-action="Index"&gt;Districts&lt;/a&gt;
+                &lt;/li&gt;
+               
+            &lt;/ul&gt;
 
-namespace Test.UI.Controllers
-{
-    public class CountryController : Controller
-    {
-        private readonly ICountryRepo _countryRepo;
+            &lt;ul class="navbar-nav ms-auto mb-2 mb-lg-0"&gt;
+                @if (ContextAccessor.HttpContext.Session.GetInt32("userId") != null)
+                {
+                    @("Hello, " + ContextAccessor.HttpContext.Session.GetString("userName") + "  ")
+                    &lt;a asp-action="Logout" asp-controller="Auth"&gt;Logout&lt;/a&gt;
+                }
+                &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;
 
-        public CountryController(ICountryRepo countryRepo)
-        {
-            _countryRepo = countryRepo;
-        }
-
-        public async Task&lt;IActionResult&gt; Index()
-        {
-            List&lt;CountryViewModel&gt; vm = new List&lt;CountryViewModel&gt;();
-            var countries = await _countryRepo.GetAll();
-            foreach (var country in countries)
-            {
-                vm.Add(new CountryViewModel { Id = country.Id, Name = country.Name });
-            }
-            return View(vm);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            CreateCountryViewModel country = new CreateCountryViewModel();
-           
-            return View(country);
-        }
-
-        [HttpPost]
-        public async Task&lt;IActionResult&gt; Create(CreateCountryViewModel vm)
-        {
-            var country = new Country
-            {
-                Name = vm.Name,
-            };
-            
-            await _countryRepo.Save(country);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public async Task&lt;IActionResult&gt; Edit(int id)
-        {
-            var country = await _countryRepo.GetById(id);
-            CountryViewModel vm = new CountryViewModel { Id = country.Id, Name=country.Name };
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task&lt;IActionResult&gt; Edit(CountryViewModel vm)
-        {
-            var country = new Country
-            {
-                Id = vm.Id,
-                Name = vm.Name
-            };
-            await _countryRepo.Edit(country);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public async Task&lt;IActionResult&gt; Delete(int id)
-        {
-            var country = await _countryRepo.GetById(id);
-            return View(country);
-        }
-
-        [HttpPost]
-        public async Task&lt;IActionResult&gt; Delete(Country country)
-        {
-            await _countryRepo.RemoveData(country);
-            return RedirectToAction("Index");
-        }
-    }
-}

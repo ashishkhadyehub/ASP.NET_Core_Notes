@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 12</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  <li>Data Annotations</li>
+                  <li>Middleware Methods</li>
+                  <li>Session State Management</li>
+                  <li>Implementation of Register, Login & Logout functionality</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Data Annotations</h2>
+                <ul>
+                    <li>Data annotations are attributes that you can apply to model properties to specify constraints, validation rules, formatting options, and other metadata about the data. </li>
+                    <li>These annotations provide a convenient way to define rules for your model without writing custom validation logic.</li>
+                </ul>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Annotation</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>[Key]</td>
+                        <td>Specifies the primary key property for the model. Required for defining entity keys in entity classes.</td>
+                    </tr>
+                    <tr>
+                        <td>[Required]</td>
+                        <td>Specifies that the property is required. If the value is null or an empty string, it fails validation.</td>
+                    </tr>
+                    <tr>
+                        <td>[StringLength(int MaximumLength)]</td>
+                        <td>Limits the maximum length of a string property. If the length of the string exceeds the specified maximum length, it fails validation.</td>
+                    </tr>
+                    <tr>
+                        <td>[Range(Type Minimum, Type Maximum)]</td>
+                        <td>Specifies a range constraint for numeric properties. If the value falls outside the specified range, it fails validation.</td>
+                    </tr>
+                    <tr>
+                        <td>[RegularExpression(string Pattern)]</td>
+                        <td>Validates that the property value matches a specified regular expression pattern.</td>
+                    </tr>
+                    <tr>
+                        <td>[EmailAddress]</td>
+                        <td>Validates that the property contains a valid email address format.</td>
+                    </tr>
+                    <tr>
+                        <td>[Url]</td>
+                        <td>Validates that the property contains a valid URL format.</td>
+                    </tr>
+                    <tr>
+                        <td>[DataType(DataType DataTypeName)]</td>
+                        <td>Specifies the data type of the property. Useful for specifying how a value should be displayed or edited.</td>
+                    </tr>
+                    <tr>
+                        <td>[Compare(string OtherProperty)]</td>
+                        <td>Compares the value of the property with the value of another property. Used for confirming passwords or other fields.</td>
+                    </tr>
+                  
+                </table>
+
+<h3>Example : Model Class File</h3>
+<pre class="language-csharp"><code>namespace MvcMusicStore.Models
+{
+    [Bind(Exclude = "AlbumId")]
+    public class Album
+    {
+        [ScaffoldColumn(false)]
+        public int AlbumId { get; set; }
+
+        [DisplayName("Genre")]
+        public int GenreId { get; set; }
+
+        [DisplayName("Artist")]
+        public int ArtistId { get; set; }
+
+        [Required(ErrorMessage = "An Album Title is required")]
+        [StringLength(160)]
+        public string Title { get; set; }
+
+        [Range(0.01, 100.00,
+            ErrorMessage = "Price must be between 0.01 and 100.00")]
+        public decimal Price { get; set; }
+
+        [DisplayName("Album Art URL")]
+        [StringLength(1024)]
+        public string AlbumArtUrl { get; set; }
+
+       
+    }
+}</code></pre>
+<hr>
+<h2>Middleware Methods</h2>
+<ul>
+    <li>Middleware methods are functions that execute in the request pipeline. They can inspect, modify, or handle incoming HTTP requests and outgoing responses.</li>
+    <li>Middleware provides a flexible way to add cross-cutting concerns to your application, such as logging, authentication, authorization, error handling, and more.</li>
+</ul>
+<table class="table table-bordered">
+    <tr>
+        <th>Middleware Method</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>UseRouting</td>
+        <td>Enables routing to map incoming requests to controller actions.</td>
+    </tr>
+    <tr>
+        <td>MapControllerRoute</td>
+        <td>Defines a convention-based route for controllers and their actions. This method is used to configure MVC routing in the application.</td>
+    </tr>
+    <tr>
+        <td>UseAuthentication</td>
+        <td>Handles authentication for incoming requests, typically setting the `User` property on the HttpContext to represent the authenticated user.</td>
+    </tr>
+    <tr>
+        <td>UseAuthorization</td>
+        <td>Handles authorization for incoming requests, verifying whether the authenticated user has the necessary permissions to access the requested resource.</td>
+    </tr>
+    <tr>
+        <td>UseEndpoints</td>
+        <td>Defines the endpoint routes for the application, typically setting up MVC endpoints for handling requests.</td>
+    </tr>
+    <tr>
+        <td>UseStaticFiles</td>
+        <td>Serves static files (such as HTML, CSS, JavaScript, images, etc.) directly from the specified directory.</td>
+    </tr>
+    <tr>
+        <td>Run</td>
+        <td>Executes a terminal middleware delegate. It's used for running custom logic as part of the request pipeline, typically at the end of the pipeline.</td>
+    </tr>
+    <tr>
+        <td>UseDeveloperExceptionPage</td>
+        <td>Displays detailed error information in the browser during development, including stack traces, exception details, etc.</td>
+    </tr>
+    <tr>
+        <td>UseExceptionHandler</td>
+        <td>Handles exceptions during production by providing a centralized error handling mechanism. It typically redirects to an error page or returns an error response.</td>
+    </tr>
+    <tr>
+        <td>UseHttpsRedirection</td>
+        <td>Redirects HTTP requests to HTTPS for secure communication.</td>
+    </tr>
+</table>
+<hr>
+<h2>Session State Management</h2>
+<ul>
+    <li>Session State Management allows you to store and retrieve user-specific data across multiple HTTP requests within the same session.</li>
+    <li>It provides a way to maintain user state throughout their interaction with the web application.</li>
+    <li>Sessions are particularly useful for scenarios such as user authentication, shopping cart data storage, and caching frequently accessed information.</li>
+</ul>
+<hr>
+<h2>Implementation of Register, Login & Logout functionality</h2>
+<h3>Steps:</h3>
+<ol>
+    <li>Add Entity/Model to store User data</li>
+    <li>Add new model(DbSet) in ApplicationDbContext class & apply migration</li>
+    <li>Create Interface with reuiqred method signatures</li>
+    <li>Implement interface</li>
+    <li>Register repository in Program.cs</li>
+    <li>Register AddSession service in Program.cs</li>
+    <li>Add middleware method to use session state management</li>
+    <li>Create required ViewModel</li>
+    <li>Create new controller</li>
+    <li>Add Register, Login & Logout methods in controller</li>
+    <li>Create Views</li>
+    <li>Update Index method in country controller</li>
+    <li>Register IHttpContextAccessor service in Program.cs (to use session variables in Views)</li>
+    <li>Update shared layout - use session variables and add logout button</li>
+</ol>
+<h3>Example: UserInfo Model Class</h3>
+<pre class="language-csharp"><code>using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Entities
+{
+    public class UserInfo
+    {
+        //Data anntation to specify primary key
+        [Key]
+        public int UserId { get; set; }
+
+        public string UserName { get; set; }
+
+        public string Password { get; set; }
+    }
+}</code></pre>
+<h3>Example: Interface File</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface IUserRepo
+    {
+        Task RegisterUser(UserInfo userInfo);
+
+        Task&lt;UserInfo&gt; GetUserInfo(string username,string password);
+    }
+}</code></pre>
+<h3>Example: Implementation (Class) File</h3>
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class UserRepo : IUserRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public UserRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task&lt;UserInfo&gt; GetUserInfo(string username, string password)
+        {
+            var user = await _context.UserInfos.FirstOrDefaultAsync(x=>x.UserName.ToLower()==username.ToLower() && x.Password.ToLower()==password.ToLower());
+            return user;
+        }
+
+        public async Task RegisterUser(UserInfo userInfo)
+        {
+            if(!Exists(userInfo.UserName))
+            {
+            await _context.UserInfos.AddAsync(userInfo);    
+            await _context.SaveChangesAsync();
+
+            }
+        }
+
+        private bool Exists(string userName)
+        {
+            return _context.UserInfos.Any(x=>x.UserName.ToLower() == userName);
+        }
+    }
+}</code></pre>
+<h3>Required updates in Program.cs</h3>
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using Test.Repositories;
+using Test.Repositories.Implementations;
+using Test.Repositories.Interfaces;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options=&gt;
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b =&gt; b.MigrationsAssembly("Test.UI")));
+
+//register repos to use IOC
+builder.Services.AddScoped&lt;ICountryRepo,CountryRepo&gt;();
+builder.Services.AddScoped&lt;IStateRepo,StateRepo&gt;();
+builder.Services.AddScoped&lt;IDistrictRepo,DistrictRepo&gt;();
+
+//register repo
+builder.Services.AddScoped&lt;IUserRepo,UserRepo&gt;();
+
+//register service to use session variables in view
+builder.Services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
+
+//register service to configure session
+builder.Services.AddSession(options =&gt;
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    //to avoid cookie hacking
+    options.Cookie.HttpOnly=true;
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+//use middleware method 
+app.UseSession();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();</code></pre>
+<h3>Example : ViewModel</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.UI.ViewModels.UserInfoViewModels
+{
+    public class UserInfoViewModel
+    {
+        public int Id { get; set; }
+
+        public string UserName { get; set; }
+
+        public string Password { get; set; }
+    }
+}</code></pre>
+<h3>Example : Controller File</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+using Test.UI.ViewModels.UserInfoViewModels;
+
+namespace Test.UI.Controllers
+{
+    public class AuthController : Controller
+    {
+        private readonly IUserRepo _userRepo;
+
+        public AuthController(IUserRepo userRepo)
+        {
+            _userRepo = userRepo;
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Register(UserInfoViewModel vm)
+        {
+            var user = new UserInfo { UserName = vm.UserName, Password = vm.Password };
+            await _userRepo.RegisterUser(user);
+            return RedirectToAction("Login");
+            
+
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Login(UserInfoViewModel vm)
+        {
+            var userInfo = await _userRepo.GetUserInfo(vm.UserName,vm.Password);
+            HttpContext.Session.SetInt32("userId",userInfo.UserId);
+            HttpContext.Session.SetString("userName",userInfo.UserName);
+            return RedirectToAction("Index","Country");
+        }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
+
+
+    }
+}</code></pre>
+<h3>Example: Register View</h3>
+<pre class="language-html"><code>@model Test.UI.ViewModels.UserInfoViewModels.UserInfoViewModel
+
+&lt;h4&gt;Register&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Register"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+          
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="UserName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="UserName" class="form-control" /&gt;
+                &lt;span asp-validation-for="UserName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Password" class="control-label"&gt;&lt;/label&gt;
+                &lt;input type="password" asp-for="Password" class="form-control" /&gt;
+                &lt;span asp-validation-for="Password" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Register" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Login"&gt;Login&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<h3>Example: Login View</h3>
+<pre class="language-html"><code>@model Test.UI.ViewModels.UserInfoViewModels.UserInfoViewModel
+
+&lt;h4&gt;Login&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Login"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+            
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="UserName" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="UserName" class="form-control" /&gt;
+                &lt;span asp-validation-for="UserName" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Password" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Password" class="form-control" /&gt;
+                &lt;span asp-validation-for="Password" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Login" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Register"&gt;Register Now&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+<h3>Required update in Country Controller (Index Method)</h3>
+<pre class="language-csharp"><code>public async Task&lt;IActionResult&gt; Index()
+{
+    if(HttpContext.Session.GetInt32("userId") != null)
+    {
+        List&lt;CountryViewModel&gt; vm = new List&lt;CountryViewModel&gt;();
+        var countries = await _countryRepo.GetAll();
+        foreach (var country in countries)
+        {
+            vm.Add(new CountryViewModel { Id = country.Id, Name = country.Name });
+        }
+        return View(vm);
+    }
+    return RedirectToAction("Login","Auth");
+        
+}</code></pre>
+<h3>Example:shared layout View</h3>
+<pre class="language-html"><code>@inject IHttpContextAccessor ContextAccessor
+&lt;nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"&gt;
+    &lt;div class="container-fluid"&gt;
+        &lt;a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"&gt;Test.UI&lt;/a&gt;
+        &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation"&gt;
+            &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"&gt;
+            &lt;ul class="navbar-nav flex-grow-1"&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"&gt;Home&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy"&gt;Privacy&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Country" asp-action="Index"&gt;Countries&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="State" asp-action="Index"&gt;States&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li class="nav-item"&gt;
+                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="District" asp-action="Index"&gt;Districts&lt;/a&gt;
+                &lt;/li&gt;
+               
+            &lt;/ul&gt;
+
+            &lt;ul class="navbar-nav ms-auto mb-2 mb-lg-0"&gt;
+                @if (ContextAccessor.HttpContext.Session.GetInt32("userId") != null)
+                {
+                    @("Hello, " + ContextAccessor.HttpContext.Session.GetString("userName") + "  ")
+                    &lt;a asp-action="Logout" asp-controller="Auth"&gt;Logout&lt;/a&gt;
+                }
+                &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
