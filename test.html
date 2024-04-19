@@ -1,39 +1,38 @@
-@inject IHttpContextAccessor ContextAccessor
-&lt;nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"&gt;
-    &lt;div class="container-fluid"&gt;
-        &lt;a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"&gt;Test.UI&lt;/a&gt;
-        &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation"&gt;
-            &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
-        &lt;/button&gt;
-        &lt;div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"&gt;
-            &lt;ul class="navbar-nav flex-grow-1"&gt;
-                &lt;li class="nav-item"&gt;
-                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"&gt;Home&lt;/a&gt;
-                &lt;/li&gt;
-                &lt;li class="nav-item"&gt;
-                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy"&gt;Privacy&lt;/a&gt;
-                &lt;/li&gt;
-                &lt;li class="nav-item"&gt;
-                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="Country" asp-action="Index"&gt;Countries&lt;/a&gt;
-                &lt;/li&gt;
-                &lt;li class="nav-item"&gt;
-                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="State" asp-action="Index"&gt;States&lt;/a&gt;
-                &lt;/li&gt;
-                &lt;li class="nav-item"&gt;
-                    &lt;a class="nav-link text-dark" asp-area="" asp-controller="District" asp-action="Index"&gt;Districts&lt;/a&gt;
-                &lt;/li&gt;
-               
-            &lt;/ul&gt;
+@model Test.Entities.Student
 
-            &lt;ul class="navbar-nav ms-auto mb-2 mb-lg-0"&gt;
-                @if (ContextAccessor.HttpContext.Session.GetInt32("userId") != null)
-                {
-                    @("Hello, " + ContextAccessor.HttpContext.Session.GetString("userName") + "  ")
-                    &lt;a asp-action="Logout" asp-controller="Auth"&gt;Logout&lt;/a&gt;
-                }
-                &lt;/ul&gt;
-        &lt;/div&gt;
+&lt;h4&gt;Student&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+           
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Contact" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Contact" class="form-control" /&gt;
+                &lt;span asp-validation-for="Contact" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Email" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Email" class="form-control" /&gt;
+                &lt;span asp-validation-for="Email" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
     &lt;/div&gt;
-&lt;/nav&gt;
+&lt;/div&gt;
 
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;
+
+@section scripts{
+    &lt;partial name="_ValidationScriptsPartial"&gt;&lt;/partial&gt;
+}

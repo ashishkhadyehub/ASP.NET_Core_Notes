@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 13</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  <li>IFormFile</li>
+                  <li>IWebHostEnvironment</li>
+                  <li>File Handling</li>
+                  <li>Action Filters</li>
+                  <li>Validations</li>
+                  <li>Generic Repository</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>IFormFile</h2>
+                <ul>
+                    <li>IFormFile is a C# representation of the file used to process or save the file.</li>
+                    <li>The IFormFile interface is used for uploading Files in ASP.Net Core MVC.</li>
+                </ul>
+                <hr>
+                <h2>IWebHostEnvironment</h2>
+                <ul>
+                    <li>IWebHostEnvironment is an interface provided by ASP.NET Core that gives you access to the web host's environment details, such as the content root path, the web root path, and environment name.</li>
+                    <li>It's particularly useful for accessing file system paths and environment-related information in your ASP.NET Core application.</li>
+                    <li>We can inject IWebHostEnvironment into your controllers, services, or other components where you need access to environment-related information.</li>
+                </ul>
+                <hr>
+                <h2>File Handling</h2>
+                <h3>Steps:</h3>
+                <ol>
+                    <li>Create new Interface and add required methods/tasks</li>
+                    <li>Create class file for implementation and add framewrok reference in repository project to use IWebHostEnvironment interface</li>
+                    <li>Implement interface</li>
+                </ol>
+                <h3>Example : Interface File</h3>
+                <pre class="language-csharp"><code>using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface IUtilityRepo
+    {
+        Task&lt;string&gt; SaveImage(string foldername,IFormFile file);
+        Task&lt;string&gt; EditImage(string foldername, IFormFile file, string dbpath);
+        Task DeleteFile(string foldername,string dbpath);
+    }
+}</code></pre>
+<h3>Example : framework reference to use IWebHostEnvironment interface</h3>
+<pre class="language-html"><code>&lt;ItemGroup&gt;
+	&lt;FrameworkReference Include="Microsoft.AspNetCore.App"&gt;&lt;/FrameworkReference&gt;
+&lt;/ItemGroup&gt;</code></pre>
+<h3>Example : CLass File (Implementation)</h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Repositories.Interfaces;
+
+namespace Test.Repositories.Implementations
+{
+    public class UtilityRepo : IUtilityRepo
+    {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpContextAccessor _contextAccessor;
+
+        public UtilityRepo(IWebHostEnvironment webHostEnvironment, IHttpContextAccessor contextAccessor)
+        {
+            _webHostEnvironment = webHostEnvironment;
+            _contextAccessor = contextAccessor;
+        }
+
+        public Task DeleteFile(string foldername, string dbpath)
+        {
+            if(string.IsNullOrEmpty(dbpath))
+            {
+                return Task.CompletedTask;
+            }
+            var filename = Path.GetFileName(dbpath);
+            var completepath = Path.Combine(_webHostEnvironment.WebRootPath,foldername,filename);
+            if(File.Exists(completepath))
+            {
+                File.Delete(completepath);
+            }
+            return Task.CompletedTask;
+        }
+
+        public async Task&lt;string&gt; EditImage(string foldername, IFormFile file, string dbpath)
+        {
+            await DeleteFile(foldername,dbpath);
+            return await SaveImage(foldername,file);
+        }
+
+        public async Task&lt;string&gt; SaveImage(string foldername, IFormFile file)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            var filename = $"{Guid.NewGuid()}{extension}";
+            string folder = Path.Combine(_webHostEnvironment.WebRootPath,foldername);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            string filepath = Path.Combine(folder,filename);
+            using (var memorystream = new MemoryStream())
+            {
+                await file.CopyToAsync(memorystream);
+                var content=memorystream.ToArray();
+                await File.WriteAllBytesAsync(filepath, content);
+            }
+
+            var basepath = $"{_contextAccessor.HttpContext.Request.Scheme}://{_contextAccessor.HttpContext.Request.Host}";
+            var completepath = Path.Combine(basepath,foldername,filename).Replace("\\","/");
+            return completepath;
+        }
+    }
+}</code></pre>
+<h2>Action Filters</h2>
+<p>Action filters are used to apply cross-cutting concerns such as authentication, authorization, validation, caching, and exception handling to action methods, enabling modular and reusable application logic."</p>
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Action Filter</th>
+        <th>Description</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>[Authorize]</td>
+        <td>Restricts access to an action method to only authenticated users or users with specific roles.</td>
+        
+      </tr>
+      <tr>
+        <td>[AllowAnonymous]</td>
+        <td>Allows access to an action method by anonymous users, even if authorization is globally enabled.</td>
+        
+      </tr>
+      <tr>
+        <td>[ValidateAntiForgeryToken]</td>
+        <td>Validates anti-forgery tokens in form submissions to prevent CSRF attacks.</td>
+        
+      </tr>
+      <tr>
+        <td>[ActionName]</td>
+        <td>Specifies an alternate name for an action method.</td>
+        
+      </tr>
+      <tr>
+        <td>[ServiceFilter]</td>
+        <td>Allows applying a service-based filter to an action method.</td>
+        
+      </tr>
+      <tr>
+        <td>[AutoValidateAntiforgeryToken]</td>
+        <td>Automatically validates anti-forgery tokens for all unsafe HTTP methods.</td>
+        
+      </tr>
+      <tr>
+        <td>[ExceptionFilter]</td>
+        <td>Serves as the base class for exception filters.</td>
+        
+      </tr>
+      <tr>
+        <td>[ResponseCache]</td>
+        <td>Configures caching settings for the response of an action method.</td>
+        
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <h2>Validations</h2>
+  <ul>
+    <li>Validation ensures that user input meets the specified criteria before processing it further. This helps maintain data integrity and prevents invalid or malicious data from being submitted to the server.</li>
+    <li><b>Attribute-based Validation:</b> ASP.NET Core provides a set of validation attributes that you can apply to model properties to define validation rules.</li>
+    <li><b>Model State Validation:</b> When we submit a form in an ASP.NET Core MVC application, the framework automatically binds the form data to the corresponding model properties. After binding, ASP.NET Core MVC validates the model using the applied validation attributes. Validation errors are stored in the ModelState dictionary, which you can access in your controller actions. We can check ModelState.IsValid to determine if the model passed validation.</li>
+    <li><b>Client-side Validation:</b> ASP.NET Core supports client-side validation using JavaScript and jQuery validation libraries. When client-side validation is enabled, validation rules defined using validation attributes are also applied on the client side, providing immediate feedback to users without the need to submit the form to the server.</li>
+  </ul>
+  
+  <h3>Steps:</h3>
+  <ol>
+    <li>Add Validation Attributes to Model Properties</li>
+    <li>Ensure that validation is enabled in your controller action method by checking the ModelState.IsValid property. If it's false, it means that there are validation errors.</li>
+    <li>Include Client-Side Validation by adding reference to _ValidationScriptsPartial</li>
+  </ol>
+  
+  <hr>
+  <h2>Generic Repository</h2>
+<p>A generic repository is a design pattern used in software development, particularly in the context of database operations, to provide a common interface for accessing data from various data sources.</p>
+<h3>Steps:</h3>
+<ol>
+    <li>Create Model Class with Validation attributes</li>
+    <li>Create Generic Interface</li>
+    <li>Implement Generic Interface</li>
+    <li>Register service (generic repository) in Program.cs</li>
+    <li>Create new Controller</li>
+    <li>Inject generic repository with required Model class</li>
+    <li>Implement required methods</li>
+    <li>Add Views as usual</li>
+    <li>Add _ValidationScriptsPartial reference in Create View to enabled client-side validations</li>
+</ol>
+<h3>Example : Model Class</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Entities
+{
+    public class Student
+    {
+
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Please enter Student Name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter Contact Number")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "The Contact Number must be exactly 10 digits.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "The Contact Number must contain only digits.")]
+        public string Contact { get; set; }
+
+        [Required(ErrorMessage = "Please enter Email")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address.")]
+        public required  string Email { get; set; }
+    }
+}</code></pre>
+<h3>Example : Generic Interface</h3>
+<pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test.Repositories.Interfaces
+{
+    public interface IGenericRepo&lt;T&gt; where T : class
+    {
+        Task&lt;IEnumerable&lt;T&gt;&gt; GetAll();
+
+        Task&lt;T&gt; GetById(int id);
+
+        Task Save(T model);
+
+        Task Edit(T model);
+
+        Task RemoveData(T model);
+
+
+    }
+}</code></pre>
+<h3>Example : Register Generic Repository in Program.cs</h3>
+<pre class="language-csharp"><code>//generic repo
+builder.Services.AddScoped(typeof(IGenericRepo&lt;&gt;),typeof(GenericRepo&lt;&gt;));</code></pre>
+<h3>Example : Controller with Generic Repository </h3>
+<pre class="language-csharp"><code>using Microsoft.AspNetCore.Mvc;
+using Test.Entities;
+using Test.Repositories.Interfaces;
+
+namespace Test.UI.Controllers
+{
+    public class StudentController : Controller
+    {
+        private readonly IGenericRepo&lt;Student&gt; _genericRepo;
+        public StudentController(IGenericRepo&lt;Student&gt; genericRepo)
+        {
+            _genericRepo = genericRepo;
+        }
+
+        public async Task&lt;IActionResult&gt;Index()
+        {
+            var students = await _genericRepo.GetAll();
+            return View(students);
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Create(Student student)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(student);
+            }
+            await _genericRepo.Save(student);
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Edit(int id)
+        {
+            var student = await _genericRepo.GetById(id);
+            return View(student);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Edit(Student student)
+        {
+           await _genericRepo.Edit(student);
+            return RedirectToAction("Index");
+        }
+
+       
+        public async Task&lt;IActionResult&gt; Delete(Student student)
+        {
+            await _genericRepo.RemoveData(student);
+            return RedirectToAction("Index");
+        }
+    }
+}</code></pre>
+<h3>Example : Create View with _ValidationScriptsPartial reference</h3>
+<pre class="language-html"><code>@model Test.Entities.Student
+
+&lt;h4&gt;Student&lt;/h4&gt;
+&lt;hr /&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form asp-action="Create"&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
+           
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Name" class="form-control" /&gt;
+                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Contact" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Contact" class="form-control" /&gt;
+                &lt;span asp-validation-for="Contact" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label asp-for="Email" class="control-label"&gt;&lt;/label&gt;
+                &lt;input asp-for="Email" class="form-control" /&gt;
+                &lt;span asp-validation-for="Email" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
+&lt;/div&gt;
+
+@section scripts{
+    &lt;partial name="_ValidationScriptsPartial"&gt;&lt;/partial&gt;
+}</code></pre>
+</div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
