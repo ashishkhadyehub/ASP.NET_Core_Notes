@@ -1,38 +1,49 @@
-@model Test.Entities.Student
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Test.Repositories.Interfaces;
 
-&lt;h4&gt;Student&lt;/h4&gt;
-&lt;hr /&gt;
-&lt;div class="row"&gt;
-    &lt;div class="col-md-4"&gt;
-        &lt;form asp-action="Create"&gt;
-            &lt;div asp-validation-summary="ModelOnly" class="text-danger"&gt;&lt;/div&gt;
-           
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="Name" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="Name" class="form-control" /&gt;
-                &lt;span asp-validation-for="Name" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="Contact" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="Contact" class="form-control" /&gt;
-                &lt;span asp-validation-for="Contact" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;label asp-for="Email" class="control-label"&gt;&lt;/label&gt;
-                &lt;input asp-for="Email" class="form-control" /&gt;
-                &lt;span asp-validation-for="Email" class="text-danger"&gt;&lt;/span&gt;
-            &lt;/div&gt;
-            &lt;div class="form-group"&gt;
-                &lt;input type="submit" value="Create" class="btn btn-primary" /&gt;
-            &lt;/div&gt;
-        &lt;/form&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
+namespace Test.Repositories.Implementations
+{
+    public class GenericRepo&lt;T&gt; : IGenericRepo&lt;T&gt; where T : class
+    {
+        private readonly ApplicationDbContext _context;
 
-&lt;div&gt;
-    &lt;a asp-action="Index"&gt;Back to List&lt;/a&gt;
-&lt;/div&gt;
+        public GenericRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-@section scripts{
-    &lt;partial name="_ValidationScriptsPartial"&gt;&lt;/partial&gt;
+        public async Task&lt;IEnumerable&lt;T&gt;&gt; GetAll()
+        {
+            return await _context.Set&lt;T&gt;().ToListAsync();
+        }
+
+        public async Task&lt;T&gt; GetById(int id)
+        {
+            return await _context.Set&lt;T&gt;().FindAsync(id);
+        }
+
+        public async Task Save(T model)
+        {
+            await _context.Set&lt;T&gt;().AddAsync(model);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Edit(T model)
+        {
+           _context.Set&lt;T&gt;().Update(model);
+            await _context.SaveChangesAsync();
+        }
+        public async Task RemoveData(T model)
+        {
+            _context.Set&lt;T&gt;().Remove(model);
+            await _context.SaveChangesAsync();
+        }
+
+       
+    }
 }
