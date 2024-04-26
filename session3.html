@@ -168,7 +168,7 @@ namespace Test.Web.Data
 <h4>Program.cs File</h4>
 <pre class="language-csharp"><code>var builder = WebApplication.CreateBuilder(args);
 //passing connectionString to ApplicationDbContext class
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));</code></pre>
 
 
