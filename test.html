@@ -1,49 +1,54 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Test.Repositories.Interfaces;
+using Project2.Repositories;
+using Project2.Repositories.Implementations;
+using Project2.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
-namespace Test.Repositories.Implementations
+using Project2.Entities;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =&gt;
 {
-    public class GenericRepo&lt;T&gt; : IGenericRepo&lt;T&gt; where T : class
-    {
-        private readonly ApplicationDbContext _context;
+    
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b =&gt; b.MigrationsAssembly("Project2.UI"));
+});
 
-        public GenericRepo(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+//identity
+builder.Services.AddDefaultIdentity&lt;ApplicationUser&gt;(options =&gt; options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores&lt;ApplicationDbContext&gt;();
+builder.Services.AddRazorPages();
 
-        public async Task&lt;IEnumerable&lt;T&gt;&gt; GetAll()
-        {
-            return await _context.Set&lt;T&gt;().ToListAsync();
-        }
+builder.Services.AddScoped&lt;IVenueRepo,VenueRepo&gt;();
+builder.Services.AddScoped&lt;IEventRepo,EventRepo&gt;();
+builder.Services.AddScoped&lt;IPlannerRepo,PlannerRepo&gt;();
+builder.Services.AddScoped&lt;IUtilityRepo, UtilityRepo&gt;();
+builder.Services.AddScoped&lt;ITicketRepo, TicketRepo&gt;();
+builder.Services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
 
-        public async Task&lt;T&gt; GetById(int id)
-        {
-            return await _context.Set&lt;T&gt;().FindAsync(id);
-        }
 
-        public async Task Save(T model)
-        {
-            await _context.Set&lt;T&gt;().AddAsync(model);
-            await _context.SaveChangesAsync();
-        }
+var app = builder.Build();
 
-        public async Task Edit(T model)
-        {
-           _context.Set&lt;T&gt;().Update(model);
-            await _context.SaveChangesAsync();
-        }
-        public async Task RemoveData(T model)
-        {
-            _context.Set&lt;T&gt;().Remove(model);
-            await _context.SaveChangesAsync();
-        }
-
-       
-    }
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//identity
+app.MapRazorPages();
+
+app.Run();

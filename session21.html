@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 21</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  <li>Microsoft Identity</li>
+                  <li>Day 5- Implementation Steps</li>
+                
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+             <h2>Microsoft Identity</h2>
+             <ul>
+                <li>Microsoft Identity allows you to implement authentication and authorization in your web applications </li>
+                <li><b>Authentication :</b> It is the process of verifying the identity of a user or system.The goal is to confirm the user's identity to grant them access to a system.</li>
+                <li><b>Authorization :</b> It is the process of determining whether an authenticated user has the right to access specific resources or perform certain actions. It controls what a user can and cannot do within a system.</li>
+             </ul>
+             
+             <h3>Microsoft Identity tables</h3>
+             <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Table Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AspNetUsers</td>
+                        <td>Stores user information including username, email, password hash, and security stamps.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetRoles</td>
+                        <td>Stores role information such as role names and normalized names.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetUserRoles</td>
+                        <td>Maps users to roles, associating user IDs with role IDs.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetUserClaims</td>
+                        <td>Stores claims for users, including claim type and value.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetUserLogins</td>
+                        <td>Stores external login information, including provider and key for users.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetRoleClaims</td>
+                        <td>Stores claims associated with roles, including claim type and value.</td>
+                    </tr>
+                    <tr>
+                        <td>AspNetUserTokens</td>
+                        <td>Stores tokens associated with users, including provider and token values.</td>
+                    </tr>
+                </tbody>
+            </table>
+             <hr>   
+            <h2>Day 5- Implementation Steps</h2>
+            <ol>
+               
+                <li>Add Microsoft Identity in application :
+
+                    <ul>
+                        <li>Install package - Microsoft.AspNet.Identity.EntityFramework</li>
+                        <li>Add new model/entity & inherit it from-IdentityUser</li>
+                        <li>Update ApplicationDbContext, inherit it from IdentityDbContext and pass IdentityUser entity
+                        <h3>ApplicationUser</h3>    
+                        <pre class="language-csharp"><code>using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Entities
+{
+    public class ApplicationUser : IdentityUser
+    {
+        public string? Name { get; set; }
+    }
+}</code></pre>
+<h3>ApplicationDbContext</h3>
+                        <pre class="language-csharp"><code>using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Project2.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories
+{
+    public class ApplicationDbContext : IdentityDbContext&lt;ApplicationUser&gt; /*DbContext*/
+    {
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
+
+
+        public DbSet&lt;Venue&gt; Venues { get; set; }
+        public DbSet&lt;Event&gt; Events { get; set; }
+        public DbSet&lt;EventPlanner&gt; EventPlanners { get; set; }
+        public DbSet&lt;Ticket&gt; Tickets { get; set; }
+        public DbSet&lt;Booking&gt; Bookings { get; set; }
+        
+
+
+    }
+}</code></pre></li>
+
+                    </ul>
+                </li>
+                <li>Confirm all packages are updated according to compatibility</li>
+                <li>Add this package reference in MVC project - Microsoft.AspNetCore.Identity.EntityFrameworkCore</li>
+                <li>MVC project->Add->New Scaffolded Item->Identity->Override all files ->Add new DbContext class -> Select User Class -> Add</li>
+                <li>Delete Data folder from -Areas</li>
+                <li>Update program.cs
+<pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using Project2.Repositories;
+using Project2.Repositories.Implementations;
+using Project2.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+
+using Project2.Entities;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =&gt;
+{
+    
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b =&gt; b.MigrationsAssembly("Project2.UI"));
+});
+
+//identity
+builder.Services.AddDefaultIdentity&lt;ApplicationUser&gt;(options =&gt; options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores&lt;ApplicationDbContext&gt;();
+builder.Services.AddRazorPages();
+
+builder.Services.AddScoped&lt;IVenueRepo,VenueRepo&gt;();
+builder.Services.AddScoped&lt;IEventRepo,EventRepo&gt;();
+builder.Services.AddScoped&lt;IPlannerRepo,PlannerRepo&gt;();
+builder.Services.AddScoped&lt;IUtilityRepo, UtilityRepo&gt;();
+builder.Services.AddScoped&lt;ITicketRepo, TicketRepo&gt;();
+builder.Services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//identity
+app.MapRazorPages();
+
+app.Run();</code></pre>
+
+                </li>
+<li>Remove newly added ConnectionString from appSettings.json</li>
+<li>Update navbar partial view - add login partial view</li>
+<li>Run application and check razor pages working</li>
+<li>Apply migration and confirm all Identity tables are created in database</li>
+            </ul>
+</div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
