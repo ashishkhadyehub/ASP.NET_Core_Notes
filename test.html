@@ -1,54 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Project2.Repositories;
-using Project2.Repositories.Implementations;
-using Project2.Repositories.Interfaces;
-using Microsoft.AspNetCore.Identity;
-
-using Project2.Entities;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =&gt;
+@if(User.IsInRole("Admin"))
 {
-    
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b =&gt; b.MigrationsAssembly("Project2.UI"));
-});
+    &lt;li class="nav-item dropdown"&gt;
+        &lt;a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"&gt;CMS&lt;/a&gt;
+        &lt;div class="dropdown-menu"&gt;
+            &lt;a class="dropdown-item" asp-controller="Venue" asp-action="Index"&gt;Venue&lt;/a&gt;
+            &lt;a class="dropdown-item" asp-controller="Planner" asp-action="Index"&gt;Event Planners&lt;/a&gt;
+            &lt;a class="dropdown-item" asp-controller="Events" asp-action="Index"&gt;Events&lt;/a&gt;
 
-//identity
-builder.Services.AddDefaultIdentity&lt;ApplicationUser&gt;(options =&gt; options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores&lt;ApplicationDbContext&gt;();
-builder.Services.AddRazorPages();
-
-builder.Services.AddScoped&lt;IVenueRepo,VenueRepo&gt;();
-builder.Services.AddScoped&lt;IEventRepo,EventRepo&gt;();
-builder.Services.AddScoped&lt;IPlannerRepo,PlannerRepo&gt;();
-builder.Services.AddScoped&lt;IUtilityRepo, UtilityRepo&gt;();
-builder.Services.AddScoped&lt;ITicketRepo, TicketRepo&gt;();
-builder.Services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
-
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+        &lt;/div&gt;
+    &lt;/li&gt;
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-//identity
-app.MapRazorPages();
-
-app.Run();

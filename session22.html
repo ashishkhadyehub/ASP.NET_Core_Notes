@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 22</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  
+                  <li>Day 6- Implementation Steps</li>
+                
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+             
+            <h2>Day 6- Implementation Steps</h2>
+            <ol>
+               <li>Update ApplicationUser entity
+                <pre class="language-csharp"><code>using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Entities
+{
+    public class ApplicationUser : IdentityUser
+    {
+        //ID,username,phone,email,password
+        public string? Name { get; set; }
+        public string? Address { get; set; }
+        public string? PIN { get; set; }
+        public string? Contact { get; set; }
+    }
+}</code></pre>
+               </li>
+               <li>Apply migration</li>
+               <li>Customize register page (Razor Page)
+                <pre class="language-html"><code>@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+&lt;h1&gt;@ViewData["Title"]&lt;/h1&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post"&gt;
+            &lt;h2&gt;Create a new account.&lt;/h2&gt;
+            &lt;hr /&gt;
+            &lt;div asp-validation-summary="ModelOnly" class="text-danger" role="alert"&gt;&lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.Name" class="form-control" autocomplete="" aria-required="true" placeholder="Name" /&gt;
+                &lt;label asp-for="Input.Name"&gt;Name&lt;/label&gt;
+                &lt;span asp-validation-for="Input.Name" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.Contact" class="form-control" autocomplete="" aria-required="true" placeholder="Contact" /&gt;
+                &lt;label asp-for="Input.Contact"&gt;Contact&lt;/label&gt;
+                &lt;span asp-validation-for="Input.Contact" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" /&gt;
+                &lt;label asp-for="Input.Email"&gt;Email&lt;/label&gt;
+                &lt;span asp-validation-for="Input.Email" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;textarea asp-for="Input.Address" class="form-control" autocomplete="" aria-required="" placeholder="Address"&gt;&lt;/textarea&gt;
+                &lt;label asp-for="Input.Address"&gt;Address&lt;/label&gt;
+                &lt;span asp-validation-for="Input.Address" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.PIN" class="form-control" autocomplete="" aria-required="" placeholder="PIN" /&gt;
+                &lt;label asp-for="Input.PIN"&gt;PIN&lt;/label&gt;
+                &lt;span asp-validation-for="Input.PIN" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" /&gt;
+                &lt;label asp-for="Input.Password"&gt;Password&lt;/label&gt;
+                &lt;span asp-validation-for="Input.Password" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="form-floating mb-3"&gt;
+                &lt;input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" /&gt;
+                &lt;label asp-for="Input.ConfirmPassword"&gt;Confirm Password&lt;/label&gt;
+                &lt;span asp-validation-for="Input.ConfirmPassword" class="text-danger"&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary"&gt;Register&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-6 col-md-offset-2"&gt;
+        &lt;section&gt;
+            &lt;h3&gt;Use another service to register.&lt;/h3&gt;
+            &lt;hr /&gt;
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    &lt;div&gt;
+                        &lt;p&gt;
+                            There are no external authentication services configured. See this &lt;a href="https://go.microsoft.com/fwlink/?LinkID=532715"&gt;article
+                            about setting up this ASP.NET application to support logging in via external services&lt;/a&gt;.
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                }
+                else
+                {
+                    &lt;form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal"&gt;
+                        &lt;div&gt;
+                            &lt;p&gt;
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    &lt;button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"&gt;@provider.DisplayName&lt;/button&gt;
+                                }
+                            &lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/form&gt;
+                }
+            }
+        &lt;/section&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+@section Scripts {
+    &lt;partial name="_ValidationScriptsPartial" /&gt;
+}</code></pre></li>
+<li>Add extra fields in InputModel class (in Register.cshtml.cs file)
+<pre class="language-csharp"><code> public class InputModel
+ {
+     
+     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+     ///     directly from your code. This API may change or be removed in future releases.
+    
+     [Required]
+     [EmailAddress]
+     [Display(Name = "Email")]
+     public string Email { get; set; }
+
+    
+     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+     ///     directly from your code. This API may change or be removed in future releases.
+    
+     [Required]
+     [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+     [DataType(DataType.Password)]
+     [Display(Name = "Password")]
+     public string Password { get; set; }
+
+     
+     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+     ///     directly from your code. This API may change or be removed in future releases.
+     
+     [DataType(DataType.Password)]
+     [Display(Name = "Confirm password")]
+     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+     public string ConfirmPassword { get; set; }
+     public string Name { get; set; }
+     public string Address { get; set; }
+     public string PIN { get; set; }
+     public string Contact { get; set; }
+
+
+
+ }</code></pre></li>
+<li>Update OnPostAsync method on same Page
+<pre class="language-csharp"><code>public async Task&lt;IActionResult&gt; OnPostAsync(string returnUrl = null)
+{
+    returnUrl ??= Url.Content("~/");
+    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+    if (ModelState.IsValid)
+    {
+        var user = CreateUser();
+        user.Name = Input.Name;
+        user.Contact=Input.Contact;
+        user.Address = Input.Address;
+        user.PIN = Input.PIN;
+    
+        await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        var result = await _userManager.CreateAsync(user, Input.Password);
+    
+        if (result.Succeeded)
+        {
+            _logger.LogInformation("User created a new account with password.");
+    
+            var userId = await _userManager.GetUserIdAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                protocol: Request.Scheme);
+    
+            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                $"Please confirm your account by &lt;a href='{HtmlEncoder.Default.Encode(callbackUrl)}'&gt;clicking here&lt;/a&gt;.");
+    
+            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+            }
+            else
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
+            }
+        }
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+    }
+    
+    // If we got this far, something failed, redisplay form
+    return Page();
+}</code></pre></li>
+<li>Test Register & Login functionality</li>
+<li><b>Data Seeding : </b> It is the process of populating a database with an initial set of data.</li>
+<li>Create & Implement interface for Data Seeding
+<pre class="language-csharp"><code>//Interface File
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories.Interfaces
+{
+    public interface IDbInitial
+    {
+        Task Seed();
+    }
+}</code></pre>
+<pre class="language-csharp"><code>//Implementation
+using Microsoft.AspNetCore.Identity;
+using Project2.Entities;
+using Project2.Repositories.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories.Implementations
+{
+    public class DbInitial : IDbInitial
+    {
+        private UserManager&lt;ApplicationUser&gt; _userManager;
+        private RoleManager&lt;IdentityRole&gt; _roleManager;
+
+        public DbInitial(UserManager&lt;ApplicationUser&gt; userManager, RoleManager&lt;IdentityRole&gt; roleManager)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        public Task Seed()
+        {
+            if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
+
+                var user = new ApplicationUser
+                {
+                    Email = "admin@gmail.com",
+                    UserName = "admin@gmail.com",
+                };
+                _userManager.CreateAsync(user,"Admin@2024").GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(user,"Admin").GetAwaiter().GetResult();
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+}</code></pre></li>
+<li>Implement IEmailSender interface <pre class="language-csharp"><code>//IEmailSender implementation
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories.Implementations
+{
+    public class EmailSender : IEmailSender
+    {
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            return Task.CompletedTask;
+        }
+    }
+}</code></pre></li>
+<li>Update program.cs
+    <pre class="language-csharp"><code>using Microsoft.EntityFrameworkCore;
+using Project2.Repositories;
+using Project2.Repositories.Implementations;
+using Project2.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+
+using Project2.Entities;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =&gt;
+{
+    
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b =&gt; b.MigrationsAssembly("Project2.UI"));
+});
+
+//AddDefaultIdentity,AddIdentity.AddIdentityCore
+//builder.Services.AddDefaultIdentity&lt;ApplicationUser&gt;(options =&gt; options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores&lt;ApplicationDbContext&gt;();
+
+//1.use AddIdentity,pass IdentityRole and comment options part, use AddDefaultTokenProviders()
+builder.Services.AddIdentity&lt;ApplicationUser,IdentityRole&gt;(/*options =&gt; options.SignIn.RequireConfirmedAccount = true*/).AddDefaultTokenProviders().AddEntityFrameworkStores&lt;ApplicationDbContext&gt;();
+builder.Services.AddRazorPages();
+
+builder.Services.AddScoped&lt;IVenueRepo,VenueRepo&gt;();
+builder.Services.AddScoped&lt;IEventRepo,EventRepo&gt;();
+builder.Services.AddScoped&lt;IPlannerRepo,PlannerRepo&gt;();
+builder.Services.AddScoped&lt;IUtilityRepo, UtilityRepo&gt;();
+builder.Services.AddScoped&lt;ITicketRepo, TicketRepo&gt;();
+builder.Services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
+
+//2.register services
+builder.Services.AddScoped&lt;IDbInitial, DbInitial&gt;();
+builder.Services.AddScoped&lt;IEmailSender, EmailSender&gt;();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+//3.Call DataSeeding method
+DataSeeding();
+
+//4.write DataSeeding method
+void DataSeeding()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var _dbRepo = scope.ServiceProvider.GetRequiredService&lt;IDbInitial&gt;();
+        _dbRepo.Seed();
+    }
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//identity
+app.MapRazorPages();
+
+app.Run();</code></pre></li>
+<li>Test data seeding working</li>
+<li>Add Authorization in Planner controller
+    <pre class="language-csharp"><code>using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Project2.Entities;
+using Project2.Repositories.Implementations;
+using Project2.Repositories.Interfaces;
+using Project2.UI.ViewModels;
+using System.Runtime.Intrinsics.X86;
+
+namespace Project2.UI.Controllers
+{
+    //Authorize planner controller for Admin role
+    [Authorize(Roles ="Admin")]
+    public class PlannerController : Controller
+    {
+        private readonly IPlannerRepo _plannerRepo;
+        private readonly IUtilityRepo _utilityRepo;
+
+        public PlannerController(IPlannerRepo plannerRepo, IUtilityRepo utilityRepo)
+        {
+            _plannerRepo = plannerRepo;
+            _utilityRepo = utilityRepo;
+        }
+
+        public async Task&lt;IActionResult&gt; Index()
+        {
+
+            List&lt;PlannerViewModel&gt; vm = new List&lt;PlannerViewModel&gt;();
+            var planners = await _plannerRepo.GetAll();
+            foreach (var planner in planners)
+            {
+                vm.Add(new PlannerViewModel { Id = planner.Id, Name = planner.Name, Description = planner.Description, ImageUrl = planner.ImageUrl });
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Create(CreatePlannerViewModel vm)
+        {
+            var planner = new EventPlanner
+            {
+                Name = vm.Name,
+                Description = vm.Description,
+                
+            };
+            if(vm.ImageUrl != null)
+            {
+                planner.ImageUrl = await _utilityRepo.SaveImage("PlannerLogos", vm.ImageUrl);
+            }
+            await _plannerRepo.Save(planner);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task&lt;IActionResult&gt; Edit(int id)
+        {
+            var planner = await _plannerRepo.GetById(id);
+            EditPlannerViewModel vm = new EditPlannerViewModel { Id = planner.Id, Name = planner.Name, Description = planner.Description, ImageUrl = planner.ImageUrl };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Edit(EditPlannerViewModel vm)
+        {
+            var planner = new EventPlanner
+            {
+                Id = vm.Id,
+                Name = vm.Name,
+                Description = vm.Description,
+                
+
+            };
+            if (vm.ChooseImage != null)
+            {
+                planner.ImageUrl = await _utilityRepo.EditImage("PlannerLogos", vm.ChooseImage,vm.ImageUrl);
+            }
+            else
+            {
+                planner.ImageUrl= vm.ImageUrl;
+            }
+            await _plannerRepo.Edit(planner);
+            return RedirectToAction("Index");
+        }
+
+
+        public async Task&lt;IActionResult&gt; Delete(int id)
+        {
+            var planner = await _plannerRepo.GetById(id);
+            await _plannerRepo.RemoveData(planner);
+            return RedirectToAction("Index");
+        }
+
+
+    }
+}</code></pre></li>
+<li>Update Program.cs<pre class="language-csharp"><code>//Configure paths
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});</code></pre></li>
+<li>Update _HeaderNav: Add condition for authorization
+    <pre class="language-html"><code>@if(User.IsInRole("Admin"))
+{
+    &lt;li class="nav-item dropdown"&gt;
+        &lt;a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"&gt;CMS&lt;/a&gt;
+        &lt;div class="dropdown-menu"&gt;
+            &lt;a class="dropdown-item" asp-controller="Venue" asp-action="Index"&gt;Venue&lt;/a&gt;
+            &lt;a class="dropdown-item" asp-controller="Planner" asp-action="Index"&gt;Event Planners&lt;/a&gt;
+            &lt;a class="dropdown-item" asp-controller="Events" asp-action="Index"&gt;Events&lt;/a&gt;
+
+        &lt;/div&gt;
+    &lt;/li&gt;
+}</code></pre>
+</li>
+               
+            </ul>
+</div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>
