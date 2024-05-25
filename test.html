@@ -1,12 +1,38 @@
-@if(User.IsInRole("Admin"))
-{
-    &lt;li class="nav-item dropdown"&gt;
-        &lt;a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"&gt;CMS&lt;/a&gt;
-        &lt;div class="dropdown-menu"&gt;
-            &lt;a class="dropdown-item" asp-controller="Venue" asp-action="Index"&gt;Venue&lt;/a&gt;
-            &lt;a class="dropdown-item" asp-controller="Planner" asp-action="Index"&gt;Event Planners&lt;/a&gt;
-            &lt;a class="dropdown-item" asp-controller="Events" asp-action="Index"&gt;Events&lt;/a&gt;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Project2.Repositories.Interfaces;
+using Project2.UI.ViewModels;
+using System.Security.Claims;
 
-        &lt;/div&gt;
-    &lt;/li&gt;
+namespace Project2.UI.Controllers
+{
+    public class TicketsController : Controller
+    {
+        private readonly ITicketRepo _ticketRepo;
+
+        public TicketsController(ITicketRepo ticketRepo)
+        {
+            _ticketRepo = ticketRepo;
+        }
+
+        [Authorize]
+        public async Task&lt;IActionResult&gt; MyTickets()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+            var Bookings = await _ticketRepo.GetBookings(userId);
+            List&lt;BookingViewModel&gt; vm = new List&lt;BookingViewModel&gt;();
+            foreach (var booking in Bookings)
+            {
+                vm.Add(new BookingViewModel {
+                    BookingId = booking.BookingId,
+                    BookingDate =booking.BookingDate,
+                    EventName=booking.Event.Name,
+                    Tickets= booking.Tickets.Select(ticketVM=&gt;new TicketViewModel { SeatNumber = ticketVM.SeatNumber}).ToList(),
+                });
+            }
+            return View(vm);
+        }
+    }
 }
