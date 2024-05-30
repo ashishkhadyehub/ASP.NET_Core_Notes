@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 24</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  
+                  <li>Day 8- Implementation Steps</li>
+                <li>Project Summary</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+             
+            <h2>Day 8- Implementation Steps</h2>
+            <ol>
+                <li>Update _HeaderNav partial view - show MyTickets only if user is login
+                <pre class="language-html"><code>@if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+{
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link" asp-controller="Tickets" asp-action="MyTickets"&gt;My Tickets&lt;/a&gt;
+    &lt;/li&gt;
+}</code></pre>
+<li>Add User navigation property in Booking entity</li>
+                <pre class="language-csharp"><code>//Booking entityusing System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Entities
+{
+    public class Booking
+    {
+        public int BookingId { get; set; }
+
+        public DateTime BookingDate { get; set; }
+
+        public int EventId { get; set; }
+
+        public Event Event { get; set; }
+
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
+        public ICollection&lt;Ticket&gt; Tickets { get; set; } = new List&lt;Ticket&gt;();
+    }
+}</code></pre></li>
+              
+               <li>Add & implement new method in IBookingRepo to get all bookings
+                <pre class="language-csharp"><code>//interface
+using Project2.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories.Interfaces
+{
+    public interface IBookingRepo
+    {
+        Task AddBooking(Booking booking);
+
+        Task&lt;IEnumerable&lt;Booking&gt;&gt; GetAll(int id);
+
+    }
+}
+                </code></pre>
+                <pre class="language-csharp"><code>//implementation
+using Microsoft.EntityFrameworkCore;
+using Project2.Entities;
+using Project2.Repositories.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.Repositories.Implementations
+{
+    public class BookingRepo : IBookingRepo
+    {
+        private readonly ApplicationDbContext _context;
+
+        public BookingRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task AddBooking(Booking booking)
+        {
+            await _context.AddAsync(booking);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task&lt;IEnumerable&lt;Booking&gt;&gt; GetAll(int id)
+        {
+            var bookings = await _context.Bookings.Include(b =&gt; b.Tickets)
+                .Include(c =&gt; c.Event)
+                .Include(u =&gt; u.User).Where(b =&gt; b.EventId == id)
+                .ToListAsync();
+
+            return bookings;
+
+
+        }
+
+    }
+}</code></pre>
+               </li>
+               <li>Create new ViewModel to show booking details in admin login
+                <pre class="language-csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2.UI.ViewModels
+{
+    public class AdminTicketDataViewModel
+    {
+        public string UserName { get; set; }
+
+        public string EventName { get; set; }
+
+        public string SeatNumber { get; set; }
+
+    }
+}</code></pre></li>
+<li>Create new method in Event Controller
+    <pre class="language-csharp"><code>[HttpGet]
+public async Task&lt;IActionResult&gt; GetTickets(int id)
+{
+    var bookings = await _bookingRepo.GetAll(id);
+    var vm = bookings.Select(b =&gt; new AdminTicketDataViewModel
+    {
+        UserName = b.User.UserName,
+        EventName = b.Event.Name,
+        SeatNumber = string.Join(",", b.Tickets.Select(t =&gt; t.SeatNumber))
+    }).ToList();
+
+    return View(vm);
+}</code></pre>
+</li>
+               <li>Create view for GetTickets method<pre class="language-html"><code>@model IEnumerable&lt;Project2.UI.ViewModels.AdminTicketDataViewModel&gt;
+
+
+    &lt;table class="table mt-4"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.UserName)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.EventName)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.SeatNumber)
+                &lt;/th&gt;
+               
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+    @foreach (var item in Model) {
+            &lt;tr&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.UserName)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.EventName)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.SeatNumber)
+                &lt;/td&gt;
+               
+            &lt;/tr&gt;
+    }
+        &lt;/tbody&gt;
+    &lt;/table&gt;</code></pre></li>
+               <li>Add link in Event List view to view bookings
+<pre class="language-html"><code>@model IEnumerable&lt;Project2.UI.ViewModels.EventViewModel&gt;
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+    
+    &lt;h1&gt;Event List&lt;/h1&gt;
+    
+    &lt;p&gt;
+        &lt;a class="btn btn-success" asp-action="Create"&gt;Create New Event&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;table class="table"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Id)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Name)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.DateTime)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Venue)
+                &lt;/th&gt;
+                &lt;th&gt;
+                    @Html.DisplayNameFor(model =&gt; model.Planner)
+                &lt;/th&gt;
+                &lt;th&gt;&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+    @foreach (var item in Model) {
+            &lt;tr&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Id)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Name)
+                &lt;/td&gt;
+    
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.DateTime)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Venue)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.DisplayFor(modelItem =&gt; item.Planner)
+                &lt;/td&gt;
+                &lt;td&gt;
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                        @Html.ActionLink("View Bookings", "GetTickets", new { id = item.Id }) |
+                   
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                &lt;/td&gt;
+            &lt;/tr&gt;
+    }
+        &lt;/tbody&gt;
+    &lt;/table&gt;</code></pre></li>
+<hr>
+<h2>Project Summary</h2>
+<ol>
+    <li>Project Development Overview</li>
+    <li>Future Scope</li>
+</ol>
+
+
+</div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

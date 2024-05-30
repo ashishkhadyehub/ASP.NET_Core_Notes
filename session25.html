@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASP.NET Core MVC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="assets/prism.js"></script>
+    <style>
+        .marginforcontainerclass {
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        .margintopbutton {
+            margin-top: 15px;
+        }
+
+        .toolbar-item button {
+            cursor: pointer !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 15px !important;
+            padding: 5px 14px !important;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            padding: 7px;
+        }
+
+        body {
+            background-color: white;
+
+        }
+
+        .table {
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        h3,h4{
+           
+            
+            text-decoration: underline;
+        }
+
+        body {
+            font-family: "Abel", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  
+        }
+        ul,ol,p{
+            line-height: 2;
+            text-align: justify;
+            font-size: 18px;
+        }
+    </style>
+    <style>
+        details {
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            padding: .5em .5em 0;
+        }
+
+        summary {
+            font-weight: bold;
+            margin: -.5em -.5em 0;
+            padding: .5em;
+        }
+
+        details[open] {
+            padding: .5em;
+        }
+
+            details[open] summary {
+                border-bottom: 1px solid #aaa;
+                margin-bottom: .5em;
+            }
+
+            
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="#">
+            <h3 style="text-decoration: none;">ASP.NET Core MVC - Session 25</h3>
+        </a>
+
+
+
+    </nav>
+    <div class="container marginforcontainerclass">
+        <div class="row">
+            <div class="col-md-12">
+
+                <a style="float: right;"  href="index.html" class="btn btn-primary">View All Sessions</a>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6">
+
+                <h2>Content</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <ul>
+                   
+                  
+                  <li>Interview questions and answers</li>
+                <li>Project Assignment</li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+             
+            <h2>Interview questions and answers</h2>
+            <details>
+                <summary>What is ASP.NET Core?</summary>
+                ASP.NET Core is a modern, open-source, and cross-platform framework developed by Microsoft for building web applications and services.
+                (also speficy features which are available in notes - session 1)
+            </details>
+            <details>
+                <summary>Differences Between ASP.NET MVC and ASP.NET Core MVC?</summary>
+                ASP.NET Core MVC is a modern, cross-platform, high-performance framework that improves upon the older ASP.NET MVC by offering better modularity, built-in dependency injection, and flexible configuration via appsettings.json and middleware pipelines. It supports hosting on multiple servers, including Kestrel, IIS, and even self-hosting, and is designed with cloud deployment in mind. ASP.NET Core MVC also integrates well with modern front-end frameworks and supports real-time applications with SignalR, making it a more versatile and powerful tool for contemporary web development compared to the more Windows-centric and monolithic ASP.NET MVC.
+            </details>
+            <details>
+                <summary>What is the use of Program.cs file?</summary>
+                <ul>
+                    <li>In ASP.NET Core, the Program.cs file serves as the entry point for the application, responsible for configuring the web host, setting up middleware, and bootstrapping the application.</li>
+                    <li>Additionally, Program.cs allows for environment configuration, specifying the environment in which the application runs, and hosting configuration, such as choosing the web server and configuring endpoints.</li>
+                    <li>Overall, Program.cs plays a important role in the startup process of an ASP.NET Core application</li>
+                </ul>
+                
+
+            </details>
+<details>
+    <summary>Difference between SDK and runtime in ASP.NET core?</summary>
+    The SDK is used for development tasks such as creating, compiling, and testing applications, while the runtime is required for executing .NET Core applications on end-users machines. The SDK includes the runtime along with development tools, while the runtime focuses solely on executing applications.
+</details>
+<details>
+    <summary>What is the use of .csproj file?</summary>
+    <ul>
+        <li>The .csproj file, or C# Project file, encapsulates project configuration, dependency management, build settings, and project structure within a structured XML format.</li>
+        <li>It defines crucial aspects such as the project's name, target framework, dependencies via &lt;PackageReference&gt; elements, build configurations, and the organization of source files and resources.</li>
+    </ul>
+</details>
+<details>
+    <summary>What is Middleware in ASP.NET Core?</summary>
+    <ul>
+        <li>Middleware in ASP.NET Core refers to components that form the request processing pipeline. Each middleware component handles an aspect of HTTP request processing, such as authentication, logging, or routing.</li>
+        <li>Middleware is added to the request pipeline in the Configure method of the Startup class using the UseMiddleware extension method of the IApplicationBuilder interface. They are executed sequentially in the order they are added.</li>
+        <li>ASP.NET Core provides built-in middleware for common tasks, but developers can also create custom middleware to implement specific application logic, allowing for flexibility and extensibility in request processing.</li>
+    </ul>
+</details>
+<details>
+    <summary>What is MVC, explain working?</summary>
+    MVC stands for Model-View-Controller, which is a software architectural pattern commonly used in web development.
+    <ul>
+        <li><b>Model:</b> The model represents the data and business logic of the application. It encapsulates the application's data and behavior, and it is responsible for managing the state of the application. Models can interact with databases, web services, or other sources of data.</li>
+        <li><b>View:</b> The view is responsible for rendering the user interface. It presents the data to the user and handles user interactions such as button clicks or form submissions. Views are typically HTML templates that are populated with data from the model.</li>
+        <li><b>Controller:</b> The controller acts as an intermediary between the model and the view. It receives user input from the view, processes it using the model, and then updates the view with the results. Controllers handle HTTP requests, invoke appropriate actions on the model, and select the appropriate view to render the response.</li>
+    </ul>
+</details>
+<details>
+    
+    <summary>What is the use of Controller class?</summary>
+    <ul>
+        <li>Controller classes in ASP.NET Core manage incoming HTTP requests from clients and contain action methods to process specific requests.</li>
+        <li>Controllers interact with the application's model to perform data manipulation or retrieval tasks, ensuring separation of concerns in the MVC architecture.</li>
+        <li>Controllers define route templates using attributes, determining which action methods respond to which URLs. They return views or data directly to clients, facilitating the dynamic generation of web content.</li>
+        
+    </ul>
+</details>
+
+<details>
+    <summary>What is the difference between action method and non action method?</summary>
+    <ul>
+        <li>Action methods in ASP.NET Core controllers are public methods designated to handle incoming HTTP requests.</li>
+        <li>Non-action methods within controller classes are public methods not intended to handle HTTP requests.</li>
+    </ul>
+</details>
+
+<details>
+    <summary>What are the razor views in asp.net core?</summary>
+    Razor views in ASP.NET Core are a type of view template used for generating HTML dynamically based on data provided by the controller. Razor is a markup syntax that allows you to embed server-side code (C# or VB.NET) directly into your HTML markup, enabling the creation of dynamic web pages. Razor views have the extension .cshtml and are a key component of the MVC (Model-View-Controller) pattern used in ASP.NET Core web applications.
+</details>
+
+<details>
+    <summary>What is Dependency Injection?</summary>
+    Dependency Injection (DI) is a design pattern used in software development, including ASP.NET Core, to achieve loose coupling between components and promote modular, testable, and maintainable code. In DI, a class depends on interfaces or abstractions rather than concrete implementations. Instead of creating its dependencies internally, a class's dependencies are "injected" into it from the outside, typically via constructor parameters or properties.
+</details>
+
+<details>
+    <summary>What is EF Core?</summary>
+    Entity Framework Core (EF Core) is a powerful and versatile object-relational mapping (ORM) framework developed by Microsoft. It is designed to simplify the process of working with relational databases in .NET applications by providing a high-level abstraction over the underlying database schema.
+    (also speficy features which are available in notes - session 2)
+</details>
+
+<details>
+    <summary>How to create connection with database using EF core?</summary>
+    Refer session 3
+</details>
+
+<details>
+    <summary>What is Kestrel Server in asp.net core?</summary>
+    Kestrel is a cross-platform, lightweight, and high-performance web server built for ASP.NET Core. It's the default web server used by ASP.NET Core applications.
+    <ul>
+        <li><b>Cross-Platform:</b> Kestrel is designed to run on multiple platforms, including Windows, Linux, and macOS. This cross-platform capability makes it suitable for hosting ASP.NET Core applications in various environments.</li>
+        <li><b>High Performance and Efficiency:</b> Engineered for performance, Kestrel efficiently handles a large number of concurrent connections with low resource consumption and fast startup times. Its asynchronous I/O processing ensures high throughput and low latency for serving HTTP requests and WebSocket connections.</li>
+        <li><b>Lightweight:</b> Kestrel is optimized for low resource usage and fast startup times. It's a lightweight server that can efficiently handle a high volume of concurrent connections, making it well-suited for microservices and containerized applications.</li>
+
+    </ul>
+</details>
+<details>
+    <summary>What is Model Binding in asp.net core?</summary>
+    Model binding in ASP.NET Core is a mechanism that automatically maps data from HTTP request parameters to action method parameters or properties of a model class. It simplifies the process of handling user input by eliminating the need for manual extraction and conversion of data from the request. When a request is received, ASP.NET Core's model binding system inspects the request data and attempts to match it to the parameters of the corresponding action method, converting the data to the appropriate types as needed. This allows developers to focus on implementing business logic rather than parsing incoming data, enhancing productivity and maintainability of web applications.
+</details>
+<details>
+    <summary>Explain binding from form values</summary>
+    Binding from form values in ASP.NET Core refers to the process of mapping data submitted through HTML forms to the properties of model classes in the server-side code. When a form is submitted, ASP.NET Core's model binding system automatically extracts the values from the form fields based on their names and matches them to the properties of the designated model class. This simplifies the handling of user input, as developers can define strongly-typed model classes representing the structure of their data, and rely on the framework to populate these models with the corresponding form values. This enables efficient and consistent data handling in web applications, reducing the amount of manual parsing and conversion code required.
+</details>
+<details>
+    <summary>Explain binding through query string</summary>
+    Binding through the query string in ASP.NET Core involves automatically extracting and mapping data from the URL's query parameters to action method parameters or properties of a model class in the server-side code.
+</details>
+<details>
+    <summary>Explain binding through route data</summary>
+    Binding through route data in ASP.NET Core involves automatically extracting and mapping data from the URL's route parameters to action method parameters or properties of a model class in the server-side code, facilitating seamless integration of URL parameters into application logic.
+</details>
+<details>
+    <summary>Explain ViewBag, ViewData, TempData</summary>
+    Refer session 8
+</details>
+<details>
+    <summary>What is Session, how to confiure session state?</summary>
+    Refer session 12
+</details>
+<details>
+    <summary>What is repository pattern, explain steps to implement it ?</summary>
+ Refer session 5
+</details>
+<details>
+    <summary>Explain EF Core relationships</summary>
+    Refer session 6
+</details>
+<details>
+    <summary>What is the use of appsettings.json file?</summary>
+    The appsettings.json file in ASP.NET Core serves as a centralized location for storing configuration settings, such as database connection strings, logging configurations, and other application settings, in a JSON format.
+</details>
+<details>
+    <summary>Explain Tag Helpers in asp.net core </summary>
+    Refer session 13
+</details>
+<details>
+    <summary>What is the use of View Components ?</summary>
+    Refer session 11
+</details>
+<details>
+    <summary>How do we manage dependencies in asp.net core?</summary>
+    In ASP.NET Core, dependency management is primarily handled through the built-in dependency injection (DI) container. Dependencies, such as services and components, are registered with the DI container
+</details>
+<details>
+    <summary>What is the difference between AddSingleton, AddScoped, and AddTransient?</summary>
+    Refer session 4
+</details>
+
+<details>
+    <summary>How we can implement security in asp.net core?</summary>
+    Implementing security in ASP.NET Core involves several strategies and practices to ensure the application is protected against various threats. Key aspects include:
+    <ul>
+        <li>Authentication and Authorization</li>
+        <li>Data Protection : Encrypt sensitive data in transit using HTTPS by configuring SSL/TLS.</li>
+        <li>Anti-Forgery Tokens : Protect against Cross-Site Request Forgery (CSRF) attacks by using anti-forgery tokens in forms. ASP.NET Core provides built-in support for generating and validating these tokens.</li>
+        <li>Middleware and Security Headers</li>
+
+    </ul>
+</details>
+<details>
+    <summary>Explain how routing is handled in asp.net? </summary>
+    Routing in ASP.NET Core is a system for mapping incoming HTTP requests to specific endpoints in an application, such as controllers and actions. It is configured and managed through a middleware component in the application's request processing pipeline.
+    
+</details>
+<details>
+    <summary>Explain validation kin asp.net core</summary>
+    Refer session 13
+</details>
+<details>
+    <summary>What is anti-forgery attack and how to prevent it in asp.net core application?</summary>
+    An anti-forgery attack, often referred to as a Cross-Site Request Forgery (CSRF) attack, is a malicious exploit where unauthorized commands are transmitted from a user that the web application trusts. ASP.NET Core provides built-in mechanisms to prevent such attacks by requiring an anti-forgery token for any state-changing operations like form submissions. This token, generated server-side, is included in both the form data (hidden field) and as a cookie. When the server receives a request, it verifies the token from the form against the token in the cookie, ensuring both originate from the same client. To implement this, you add the @Html.AntiForgeryToken() helper in your forms and decorate your controller actions with the [ValidateAntiForgeryToken] attribute. This helps to confirm that the form submissions are legitimate and not forged.
+</details>
+<details>
+    <summary>Explain model state in asp.net core</summary>
+    In ASP.NET Core, Model State is a mechanism used to track the state of model binding and to validate the input received from users. It plays a crucial role in ensuring that the data submitted by users conforms to the expected data types and validation rules defined in the model.<br>
+    The ModelState object contains two key properties:
+    <ul>
+        <li><b>IsValid:</b> This property indicates whether the model binding and validation were successful. It returns true if there are no errors; otherwise, it returns false.</li>
+        <li><b>Errors:</b> This property contains a collection of errors that occurred during the binding and validation processes.</li>
+    </ul>
+</details>
+<details>
+    <summary>Explain use of ViewModels?</summary>
+    ViewModels play a crucial role in ASP.NET Core applications by acting as a bridge between the domain models and the views. They are specifically designed to contain the data that a view requires to render, which may include data from multiple domain models or additional properties that are only relevant to the view. 
+</details>
+<details>
+    <summary>What are the action filters in asp.net core?</summary>
+    Refer session 13
+</details>
+<details>
+    <summary>What are the Data Annotations in asp.net core?</summary>
+    Refer session 12
+</details>
+<!-- <details>
+    <summary></summary>
+    
+</details>
+<details>
+    <summary></summary>
+    
+</details> -->
+</div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #592c8c;">
+
+        <a class="navbar-brand" style="margin:auto" href="https:www.revolutionit.in">&copy; <img src="Images/whitelogo.png" style="height: 40px;"></a>
+
+
+
+    </nav>
+</body>
+
+</html>

@@ -112,6 +112,7 @@
                   <li>Action Filters</li>
                   <li>Validations</li>
                   <li>Generic Repository</li>
+                  <li>Tag Helpers</li>
                 </ul>
             </div>
 
@@ -515,6 +516,51 @@ namespace Test.UI.Controllers
 @section scripts{
     &lt;partial name="_ValidationScriptsPartial"&gt;&lt;/partial&gt;
 }</code></pre>
+<hr>
+<h2>Tag Helpers</h2>
+<ul>
+<li>Tag Helpers in ASP.NET Core are a new feature in the Razor syntax that enable server-side code to participate in creating and rendering HTML elements in Razor views.</li>
+<li>They provide a way to make your views cleaner and more maintainable by reducing the amount of inline C# code mixed with HTML.</li>
+<li><b>Built-in Tag Helpers</b>
+<ul>
+    <li><b>Form Tag Helper:</b> Simplifies the creation of forms and form elements.</li>
+    <li><b>Anchor Tag Helper:</b> Helps with generating URLs for hyperlinks.</li>
+    <li><b>Input Tag Helper:</b> Enhances the &lt;input&gt; element by adding attributes and setting values.</li>
+    <li><b>Label Tag Helper:</b> Generates &lt;label&gt; elements for form fields.</li>
+    <li><b>Select Tag Helper:</b> Helps create &lt;select&gt; dropdown lists.</li>
+    <li><b>Validation Tag Helpers:</b> Helps display validation messages and summaries.</li>
+</ul></li>
+<li>
+    <b>Custome Tag Helpers :</b>
+    To create a custom Tag Helper, follow these steps:
+    <ol>
+        <li>Create a Tag Helper Class: Create a new class that inherits from TagHelper.</li>
+        <li>Override the Process Method: Override the Process method to define the Tag Helper's behavior.</li>
+        <li>Register the Tag Helper: Register the Tag Helper in the _ViewImports.cshtml file.</li>
+    </ol>
+    <pre class="language-csharp"><code>//tag helper class
+using Microsoft.AspNetCore.Razor.TagHelpers;
+
+public class EmailTagHelper : TagHelper
+{
+    public string Address { get; set; }
+    public string Display { get; set; }
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        output.TagName = "a"; // Replaces the <email> tag with an <a> tag
+        output.Attributes.SetAttribute("href", $"mailto:{Address}");
+        output.Content.SetContent(Display);
+    }
+}</code></pre>
+<pre class="language-html"><code>//register tag helper in _ViewImports.cshtml
+@addTagHelper *,Project2.UI</code></pre>
+
+<pre class="language-html"><code>//use tag helper in view
+&lt;email address="example@example.com" display="Send Email"&gt;&lt;/email&gt;</code></pre>
+</li>
+
+</ul>
 </div>
         </div>
     </div>
